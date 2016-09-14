@@ -17,5 +17,6 @@ int main() {
 
     // TODO: Finish the program!
 
-    return 0;
+
+    return 1;
 }
