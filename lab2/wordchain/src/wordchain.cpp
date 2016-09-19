@@ -11,14 +11,12 @@ const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
 void findNeighbours(stack<string> &stackToCheck, queue<stack<string>> &wordQueueOrg,
                     map<string, string> &dictionary, map<string, string> &checkedNeighbours){
     string topWord = stackToCheck.top();
-    for(char& c : topWord){
+    for(unsigned int charNum = 0 ; charNum < topWord.length(); charNum++){
         for(const char& alp : ALPHABET){
             string possibleNeighbour = topWord;
-            possibleNeighbour[charNum] = alp;
-            //How to use charNum as index? .size and .lenght does not seem to work.
-            if(dictionary.find(possibleNeighbour) && !checkedNeighbours.find(possibleNeighbour)){
-                //NOTE neither of the operations used in the if returns a bool. Needs to be fixed.
-                //Essentially want to make sure the word is a valid word AND that it hasn't been used.
+            possibleNeighbour[charNum] = alp;                      
+            if(dictionary.find(possibleNeighbour) != dictionary.end() && checkedNeighbours.find(possibleNeighbour) == checkedNeighbours.end()){
+                //Code above will check if the word is in dictionary by making sure it does not reach the end of the map.
                 stack<string> stackCpy = stackToCheck;
                 stackCpy.push(possibleNeighbour);
                 wordQueueOrg.push(stackCpy);
