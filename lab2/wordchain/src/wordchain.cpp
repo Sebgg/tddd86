@@ -31,9 +31,10 @@ void findNeighbours(stack<string> &stackToCheck, queue<stack<string>> &wordQueue
                && checkedNeighbours.find(possibleNeighbour) == checkedNeighbours.end()){
                 //Code above will check if the word is in dictionary
                 //by making sure it does not reach the end of the map.
-                stack<string> stackCpy = stackToCheck;
-                stackCpy.push(possibleNeighbour);
-                wordQueueOrg.push(stackCpy);
+                // stack<string> stackCpy = stackToCheck;
+                stackToCheck.push(possibleNeighbour);
+                wordQueueOrg.push(stackToCheck);
+                checkedNeighbours.insert(possibleNeighbour, possibleNeighbour);
             }
         }
     }
@@ -76,8 +77,6 @@ int main() {
     cout << "If you give me two English words, I will transform the" << endl;
     cout << "first into the second by changing one letter at a time." << endl;
     cout << endl;
-
-    // TODO: Finish the program!
 
     string word1, word2;
     cout << "Please type two words: ";
