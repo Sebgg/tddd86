@@ -8,6 +8,18 @@ using namespace std;
 
 const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
 
+void printCorrectStack(stack<string> &correctStack, string &w1, string &w2){
+    cout << "Chain from " << w2 << " back to " <<  w1 << ":" << endl;
+    while(!correctStack.empty()){
+        cout << correctStack.top() << flush;
+        /*Since we don't want to jump down one line we use flush.
+         *Flush is a std function used to make sure output gets sent to
+         *the terminal. endl does this too but also moves down one line.*/
+        correctStack.pop();
+    }
+    cout << "Have a nice day!" << endl;
+}
+
 void findNeighbours(stack<string> &stackToCheck, queue<stack<string>> &wordQueueOrg,
                     map<string, string> &dictionary, map<string, string> &checkedNeighbours){
     string topWord = stackToCheck.top();
@@ -15,8 +27,10 @@ void findNeighbours(stack<string> &stackToCheck, queue<stack<string>> &wordQueue
         for(const char& alp : ALPHABET){
             string possibleNeighbour = topWord;
             possibleNeighbour[charNum] = alp;                      
-            if(dictionary.find(possibleNeighbour) != dictionary.end() && checkedNeighbours.find(possibleNeighbour) == checkedNeighbours.end()){
-                //Code above will check if the word is in dictionary by making sure it does not reach the end of the map.
+            if(dictionary.find(possibleNeighbour) != dictionary.end()
+               && checkedNeighbours.find(possibleNeighbour) == checkedNeighbours.end()){
+                //Code above will check if the word is in dictionary
+                //by making sure it does not reach the end of the map.
                 stack<string> stackCpy = stackToCheck;
                 stackCpy.push(possibleNeighbour);
                 wordQueueOrg.push(stackCpy);
@@ -48,7 +62,7 @@ void wordChain(string w1, string w2){
         stack<string> stackToCheck = wordQueue.front();
         wordQueue.pop();
         if(stackToCheck.top() == w2){
-            //print stack with complete chain
+            printCorrectStack(stackToCheck, w1, w2); //print stack with complete chain
         }
         else {
             findNeighbours(stackToCheck, wordQueue, dictionary, checkedNeighbours);
@@ -69,8 +83,6 @@ int main() {
     cout << "Please type two words: ";
     cin >> word1 >> word2;
     wordChain(word1, word2);
-
-
 
     return 0;
 }
