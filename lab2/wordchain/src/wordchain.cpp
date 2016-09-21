@@ -3,7 +3,7 @@
 #include <string>
 #include <queue>
 #include <stack>
-#include <map>
+#include <set>
 using namespace std;
 
 const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
@@ -11,7 +11,7 @@ const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
 void printCorrectStack(stack<string> &correctStack, string &w1, string &w2){
     cout << "Chain from " << w2 << " back to " <<  w1 << ":" << endl;
     while(!correctStack.empty()){
-        cout << correctStack.top() << flush;
+        cout << " " << correctStack.top() << " " << flush;
         /*Since we don't want to jump down one line we use flush.
          *Flush is a std function used to make sure output gets sent to
          *the terminal. endl does this too but also moves down one line.*/
@@ -20,8 +20,8 @@ void printCorrectStack(stack<string> &correctStack, string &w1, string &w2){
     cout << "Have a nice day!" << endl;
 }
 
-void findNeighbours(stack<string> &stackToCheck, queue<stack<string>> &wordQueueOrg,
-                    map<string, string> &dictionary, map<string, string> &checkedNeighbours){
+void findNeighbours(stack<string> &stackToCheck, queue<stack<string> > &wordQueueOrg,
+                    set<string> &dictionary, set<string> &checkedNeighbours){
     string topWord = stackToCheck.top();
     for(unsigned int charNum = 0 ; charNum < topWord.length(); charNum++){
         for(const char& alp : ALPHABET){
@@ -30,11 +30,11 @@ void findNeighbours(stack<string> &stackToCheck, queue<stack<string>> &wordQueue
             if(dictionary.find(possibleNeighbour) != dictionary.end()
                && checkedNeighbours.find(possibleNeighbour) == checkedNeighbours.end()){
                 //Code above will check if the word is in dictionary
-                //by making sure it does not reach the end of the map.
-                // stack<string> stackCpy = stackToCheck;
-                stackToCheck.push(possibleNeighbour);
-                wordQueueOrg.push(stackToCheck);
-                checkedNeighbours.insert(possibleNeighbour, possibleNeighbour);
+                //by making sure it does not reach the end of the set.
+                stack<string> stackCpy = stackToCheck;
+                stackCpy.push(possibleNeighbour);
+                wordQueueOrg.push(stackCpy);
+                checkedNeighbours.insert(possibleNeighbour);
             }
         }
     }
@@ -42,20 +42,20 @@ void findNeighbours(stack<string> &stackToCheck, queue<stack<string>> &wordQueue
 
 void wordChain(string w1, string w2){
 
-    queue<stack<string>> wordQueue;
+    queue<stack<string> > wordQueue;
     stack<string> startingWord;
     startingWord.push(w1);
     wordQueue.push(startingWord);
-    map<string, string> checkedNeighbours;
-    checkedNeighbours.insert(w1, w1);
+    set<string> checkedNeighbours;
+    checkedNeighbours.insert(w1);
 
     ifstream input;
     input.open("dictionary.txt");
     string wordFromDict;
-    map<string, string> dictionary;
+    set<string> dictionary;
 
     while(getline(input, wordFromDict)){ //Read each line from dictionary.
-        dictionary.insert(wordFromDict, wordFromDict);
+        dictionary.insert(wordFromDict);
     }
     input.close();
 
