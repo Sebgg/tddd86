@@ -9,6 +9,8 @@ HEADERS = $$PWD/src/*.h
 HEADERS += $$PWD/lib/*.h
 
 QMAKE_CXXFLAGS += -std=c++11
+#QMAKE_CXXFLAGS += -stdlib=libc++
+#QMAKE_LFLAGS += -stdlib=libc++
 
 INCLUDEPATH += $$PWD/lib/
 

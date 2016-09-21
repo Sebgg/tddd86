@@ -9,6 +9,8 @@ using namespace std;
 const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
 
 void printCorrectStack(stack<string> &correctStack, string &w1, string &w2){
+    /*Prints the wordchain when the correct one is found.*/
+
     cout << "Chain from " << w2 << " back to " <<  w1 << ":" << endl;
     while(!correctStack.empty()){
         cout << correctStack.top() << " " << flush;
@@ -22,6 +24,8 @@ void printCorrectStack(stack<string> &correctStack, string &w1, string &w2){
 
 void findNeighbours(stack<string> &stackToCheck, queue<stack<string> > &wordQueueOrg,
                     set<string> &dictionary, set<string> &checkedNeighbours){
+    /*Finds and collects neighbours to top word in current stack.*/
+
     string topWord = stackToCheck.top();
     for(unsigned int charNum = 0 ; charNum < topWord.length(); charNum++){
         for(const char& alp : ALPHABET){
@@ -29,8 +33,8 @@ void findNeighbours(stack<string> &stackToCheck, queue<stack<string> > &wordQueu
             possibleNeighbour[charNum] = alp;                      
             if(dictionary.find(possibleNeighbour) != dictionary.end()
                && checkedNeighbours.find(possibleNeighbour) == checkedNeighbours.end()){
-                //Code above will check if the word is in dictionary
-                //by making sure it does not reach the end of the set.
+                /*Code above will check if the word is in dictionary
+                *by making sure it does not reach the end of the set.*/
                 stack<string> stackCpy = stackToCheck;
                 stackCpy.push(possibleNeighbour);
                 wordQueueOrg.push(stackCpy);
@@ -41,6 +45,8 @@ void findNeighbours(stack<string> &stackToCheck, queue<stack<string> > &wordQueu
 }
 
 void wordChain(string w1, string w2){
+    /*Main function that either prints the right stack,
+    *or calls for findNeighbour to find new stacks.*/
 
     queue<stack<string> > wordQueue;
     stack<string> startingWord;
@@ -73,6 +79,9 @@ void wordChain(string w1, string w2){
 }
 
 int main() {
+    /*Main function for initializing the program.*/
+
+    // Todo: check if first and last word is in dictionary.
     cout << "Welcome to TDDD86 Word Chain." << endl;
     cout << "If you give me two English words, I will transform the" << endl;
     cout << "first into the second by changing one letter at a time." << endl;
