@@ -14,7 +14,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_QML_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -std=c++11 -stdlib=libc++ -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -std=c++11 -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I../life/lib/StanfordCPPLib -I../life/lib -isystem /usr/include/qt -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -I. -I/usr/lib/qt/mkspecs/linux-g++
 QMAKE         = /usr/bin/qmake-qt5
 DEL_FILE      = rm -f
@@ -35,7 +35,7 @@ COMPRESS      = gzip -9f
 DISTNAME      = Life1.0.0
 DISTDIR = /home/sebgg/Skolarbete/tddd86/tddd86/build-Life-Desktop-Debug/.tmp/Life1.0.0
 LINK          = g++
-LFLAGS        = -stdlib=libc++
+LFLAGS        = 
 LIBS          = $(SUBLIBS) -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
@@ -213,6 +213,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/qt_config.prf \
 		/usr/lib/qt/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/qt/mkspecs/features/spec_post.prf \
+		../life/.qmake.stash \
 		/usr/lib/qt/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/qt/mkspecs/features/default_pre.prf \
 		/usr/lib/qt/mkspecs/features/resolve_config.prf \
@@ -423,6 +424,7 @@ Makefile: ../life/Life.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/
 		/usr/lib/qt/mkspecs/features/qt_config.prf \
 		/usr/lib/qt/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/qt/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/qt/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/qt/mkspecs/features/default_pre.prf \
 		/usr/lib/qt/mkspecs/features/resolve_config.prf \
@@ -604,6 +606,7 @@ Makefile: ../life/Life.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/
 /usr/lib/qt/mkspecs/features/qt_config.prf:
 /usr/lib/qt/mkspecs/linux-g++/qmake.conf:
 /usr/lib/qt/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/qt/mkspecs/features/exclusive_builds.prf:
 /usr/lib/qt/mkspecs/features/default_pre.prf:
 /usr/lib/qt/mkspecs/features/resolve_config.prf:

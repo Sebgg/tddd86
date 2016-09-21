@@ -11,8 +11,8 @@ HEADERS += $$PWD/lib/StanfordCPPLib/*.h
 HEADERS += $$PWD/lib/*.h
 
 QMAKE_CXXFLAGS += -std=c++11
-QMAKE_CXXFLAGS += -stdlib=libc++
-QMAKE_LFLAGS += -stdlib=libc++
+# QMAKE_CXXFLAGS += -stdlib=libc++
+# QMAKE_LFLAGS += -stdlib=libc++
 
 INCLUDEPATH += $$PWD/lib/StanfordCPPLib/
 INCLUDEPATH += $$PWD/lib/

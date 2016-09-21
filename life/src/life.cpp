@@ -20,13 +20,13 @@ using namespace std;
 void printGrid(const Grid<char> &grid, const int &nRows, const int &nCols);
 void tick(Grid<char> &gridOrg, const int &nRows, const int &nCols);
 void checkNeighbours(const int row, const int col, const Grid<char> &grid, int &cnt);
-void perfomCommand(Grid<char> &grid, const char command, const int &nRows, const int &nCols, bool &playing, bool &animating);
-void createGrid(Grid<char> &grid, const int &nRows, const int &nCols);
+void perfomCommand(Grid<char> &grid, const char command, const int &nRows, const int &nCols, bool &playing);
+void createGrid(Grid<char> &grid, int &nRows, int &nCols);
 void animate(Grid<char> &grid, const int &nRows, const int &nCols);
 void play(Grid<char> &grid, const int &nRows, const int &nCols);
 
 
-void createGrid(Grid<char> &grid, const int &nRows, const int &nCols){
+void createGrid(Grid<char> &grid, int &nRows, int &nCols){
     /*Creates a grid based on the input textfile.*/
 
     string fileName;
@@ -107,11 +107,11 @@ void checkNeighbours(const int row, const int col, const Grid<char> &grid, int &
     }
 }
 
-void performCommand(Grid<char> &grid, const char command, const int &nRows, const int &nCols, bool &playing, bool &animating) {
+void performCommand(Grid<char> &grid, const char command, const int &nRows, const int &nCols, bool &playing) {
     /*Evaluates the user input and performs correct command.*/
 
     if(command == 'a'){
-        animating(grid, nRows, nCols);
+        animate(grid, nRows, nCols);
     }
     else if(command == 't'){
         tick(grid, nRows, nCols);
@@ -145,7 +145,7 @@ void play(Grid<char> &grid, const int &nRows, const int &nCols){
         char command;
         cout << "a)nimate, t)ick, q)uit? " << endl;
         cin >> command;
-        performCommand(grid, command, nRows, nCols, playing, animating);
+        performCommand(grid, command, nRows, nCols, playing);
     }
 }
 
@@ -153,7 +153,7 @@ void play(Grid<char> &grid, const int &nRows, const int &nCols){
 int main() {
     /*Main function, prints welcome message and calls correct functions.*/
 
-    cout << "\nWelcome to the TDDD86 Game of Life, \n,
+    cout << "\nWelcome to the TDDD86 Game of Life, \n,"
          << "a simulation of the lifecycle of a bacteria colony. \n"
          << "Cells (X) live and die by the following rules: \n"
          << "- A cell with 1 or fewer neighbours dies.\n"
