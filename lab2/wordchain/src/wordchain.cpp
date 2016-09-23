@@ -44,7 +44,17 @@ void findNeighbours(stack<string> &stackToCheck, queue<stack<string> > &wordQueu
     }
 }
 
-void wordChain(string w1, string w2){
+void createDictionary(set<string> &dictionary){
+    ifstream input("dictionary.txt");
+    string wordFromDict;
+
+    while(input >> wordFromDict){ //Read each line from dictionary.
+        dictionary.insert(wordFromDict);
+    }
+    input.close();
+}
+
+void wordChain(string w1, string w2, set<string> &dictionary){ //Constants?
     /*Main function that either prints the right stack,
     *or calls for findNeighbour to find new stacks.*/
 
@@ -54,16 +64,6 @@ void wordChain(string w1, string w2){
     wordQueue.push(startingWord);
     set<string> checkedNeighbours;
     checkedNeighbours.insert(w1);
-
-    ifstream input;
-    input.open("dictionary.txt");
-    string wordFromDict;
-    set<string> dictionary;
-
-    while(getline(input, wordFromDict)){ //Read each line from dictionary.
-        dictionary.insert(wordFromDict);
-    }
-    input.close();
 
     while(!wordQueue.empty()){ //Main loop
         stack<string> stackToCheck = wordQueue.front();
@@ -88,9 +88,21 @@ int main() {
     cout << endl;
 
     string word1, word2;
+    set<string> dictionary;
+    createDictionary(dictionary);
     cout << "Please type two words: ";
     cin >> word1 >> word2;
-    wordChain(word1, word2);
+    if(dictionary.count(word1) == 0 && dictionary.count(word2) == 0){
+        cout << "Neither of the words are in the dictionary" << endl;
+        return 0;
+    }else if(dictionary.count(word1) == 0){
+        cout << word1 << " is not in the dictionary" << endl;
+        return 0;
+    }else if(dictionary.count(word2) == 0){
+        cout << word2 << " is not in the dictionary" << endl;
+        return 0;
+    }
+    wordChain(word1, word2, dictionary);
 
     return 0;
 }
