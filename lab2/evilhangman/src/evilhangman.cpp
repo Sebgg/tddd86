@@ -31,6 +31,9 @@ void printGameStatus(const string& chosenWord, const int& guessCnt, const map<st
     cout << "Word: " << chosenWord << "\n"
          << "Guesses left: " << guessCnt << endl;
     showFamilies(families);
+    //Add guessedLetters and print them.
+    //NOTE, fix check so char is in alphabet and not been used before.
+    //NOTE2, make player chose if it wants to see all families or not.
 }
 
 void createFamilies(vector<string>& dictionary, const char& guessedChar, const int& wordLength,
@@ -71,6 +74,7 @@ void play(vector<string> &dictionary, map<string, vector<string> >& families, st
         guessCnt--; //In the end of the while-loop for decrementing the number of guesses.
         printGameStatus(chosenWord, guessCnt, families);
     }
+    cout << "You lose! Pepe is victorious once again >:) sucky sucky" << endl;
 }
 
 void readDictionary(vector<string> &dictionary, const int &wordLength){
@@ -97,6 +101,7 @@ int main() {
     char guessedChar;
     string defaultKey;
     string chosenWord;
+    string guessedLetters;
     map<string, vector<string> > families;
 
     cout << "How long is the word?" << endl;
