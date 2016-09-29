@@ -15,6 +15,7 @@ const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
 
 bool checkChar(const char &guessedChar, set<char>& guessedLetters){
     /*Makes sure the guessed character is in the alphabet and has not been used earlier*/
+
     bool notRight = false;
 
     for(auto const& character : ALPHABET){
@@ -60,7 +61,7 @@ void printGameStatus(const string& chosenWord, const int& guessCnt, const map<st
     }
     cout << endl;
     if(userInfo){
-    showFamilies(families);
+        showFamilies(families);
     }
 }
 
@@ -100,17 +101,17 @@ void play(vector<string> &dictionary, map<string, vector<string> >& families, st
         cout << "What's your next guess?" << endl;
         cin >> guessedChar;
 
-    while(checkChar(guessedChar, guessedLetters) != true){
-        cout << "Invalid input. Remember, only letters "
-             << "and do not guess the same letter twice.\n" << endl;
-        cout << "What's your next guess?" << endl;
-        cin >> guessedChar;
-    }
+        while(!checkChar(guessedChar, guessedLetters)){
+            cout << "Invalid input. Remember, only letters "
+                 << "and do not guess the same letter twice.\n" << endl;
+            cout << "What's your next guess?" << endl;
+            cin >> guessedChar;
+        }
 
         guessedLetters.insert(guessedChar);
         createFamilies(dictionary, guessedChar, wordLength, families, defaultKey, chosenWord);
         guessCnt--; //In the end of the while-loop for decrementing the number of guesses.
-            printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
+        printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
     }
     cout << "You lose! Pepe is victorious once again >:)" << endl;
 }
@@ -118,7 +119,8 @@ void play(vector<string> &dictionary, map<string, vector<string> >& families, st
 void readDictionary(vector<string> &dictionary, const int &wordLength){
     /*Creates the initial dictionary based on the first guessed letter and dictionary.txt*/
 
-    ifstream in("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/evilhangman/res/dictionary.txt");  // for hampus to test
+    //ifstream in("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/evilhangman/res/dictionary.txt");  // for OSX
+    ifstream in("dictionary.txt");  // for linux
     string wordFromDict;
 
     while(in >> wordFromDict){ //Read each line from dictionary.
@@ -142,7 +144,7 @@ int main() {
     string chosenWord;
     set<char> guessedLetters;
     string extraInfo;
-    bool userInfo;
+    bool userInfo = false;
     map<string, vector<string> > families;
 
     cout << "Do you want to know extra information about the game? Y/N: " << endl;
@@ -150,8 +152,6 @@ int main() {
 
     if(extraInfo == "Y" || extraInfo == "y"){ //checks to see if the users wants to see extra information about the game
         userInfo = true;
-    } else {
-        userInfo = false;
     }
 
     cout << "How long is the word?" << endl;
