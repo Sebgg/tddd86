@@ -15,7 +15,6 @@ const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
 
 bool checkChar(const char &guessedChar, set<char>& guessedLetters){
     /*Makes sure the guessed character is in the alphabet and has not been used earlier*/
-
     bool notRight = false;
 
     for(auto const& character : ALPHABET){
@@ -26,17 +25,21 @@ bool checkChar(const char &guessedChar, set<char>& guessedLetters){
     return notRight;
 }
 
-void chooseLargestFamily(const map<string, vector<string> >& families, vector<string>& dictionary, string& chosenWord){
+void chooseLargestFamily(const map<string, vector<string> >& families, vector<string>& dictionary, string& chosenWord,
+                         string& defaultKey){
     /*Compares all families and chooses the largest for the dictionary*/
 
     vector<string> largestFamily;
+    string largestFamilyKey;
     for(auto& family : families){
         if(family.second.size() > largestFamily.size()){
             largestFamily = family.second;
             chosenWord = family.first;
+            largestFamilyKey = family.first;
         }
     }
     dictionary = largestFamily;
+    defaultKey = largestFamilyKey;
 }
 
 void showFamilies(const map<string, vector<string> >& families){
@@ -61,12 +64,12 @@ void printGameStatus(const string& chosenWord, const int& guessCnt, const map<st
     }
     cout << endl;
     if(userInfo){
-        showFamilies(families);
+    showFamilies(families);
     }
 }
 
 void createFamilies(vector<string>& dictionary, const char& guessedChar, const int& wordLength,
-                    map<string, vector<string> >& families, const string& defaultKey, string& chosenWord){
+                    map<string, vector<string> >& families, string& defaultKey, string& chosenWord){
     /*Creates a key for each found family and simultaneoulsy adds the corresponding words.*/
 
     map<string, vector<string> > newFamilies;
@@ -80,7 +83,7 @@ void createFamilies(vector<string>& dictionary, const char& guessedChar, const i
         newFamilies[newFamilyKey].push_back(word);
     }
     families = newFamilies;
-    chooseLargestFamily(families, dictionary, chosenWord);
+    chooseLargestFamily(families, dictionary, chosenWord, defaultKey);
  }
 
 void initDefaultKey(int wordLength, string& defaultKey){
@@ -93,25 +96,29 @@ void initDefaultKey(int wordLength, string& defaultKey){
 
 
 void play(vector<string> &dictionary, map<string, vector<string> >& families, string& chosenWord,
-          int &guessCnt, char &guessedChar, const int &wordLength, const string& defaultKey,
+          int &guessCnt, char &guessedChar, const int &wordLength, string& defaultKey,
         set<char> &guessedLetters, const bool &userInfo){
     /*runs evil hangman while player still have guesses left.*/
 
     while(guessCnt > 0){
         cout << "What's your next guess?" << endl;
         cin >> guessedChar;
+        string oldKey = defaultKey;
 
-        while(!checkChar(guessedChar, guessedLetters)){
-            cout << "Invalid input. Remember, only letters "
-                 << "and do not guess the same letter twice.\n" << endl;
-            cout << "What's your next guess?" << endl;
-            cin >> guessedChar;
-        }
+    while(checkChar(guessedChar, guessedLetters) != true){
+        cout << "Invalid input. Remember, only letters "
+             << "and do not guess the same letter twice.\n" << endl;
+        cout << "What's your next guess?" << endl;
+        cin >> guessedChar;
+    }
 
         guessedLetters.insert(guessedChar);
         createFamilies(dictionary, guessedChar, wordLength, families, defaultKey, chosenWord);
-        guessCnt--; //In the end of the while-loop for decrementing the number of guesses.
-        printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
+        if(oldKey == defaultKey){
+        guessCnt--;
+        }
+        //In the end of the while-loop for decrementing the number of guesses.
+            printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
     }
     cout << "You lose! Pepe is victorious once again >:)" << endl;
 }
@@ -119,8 +126,7 @@ void play(vector<string> &dictionary, map<string, vector<string> >& families, st
 void readDictionary(vector<string> &dictionary, const int &wordLength){
     /*Creates the initial dictionary based on the first guessed letter and dictionary.txt*/
 
-    //ifstream in("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/evilhangman/res/dictionary.txt");  // for OSX
-    ifstream in("dictionary.txt");  // for linux
+    ifstream in("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/evilhangman/res/dictionary.txt");  // for hampus to test
     string wordFromDict;
 
     while(in >> wordFromDict){ //Read each line from dictionary.
@@ -144,7 +150,7 @@ int main() {
     string chosenWord;
     set<char> guessedLetters;
     string extraInfo;
-    bool userInfo = false;
+    bool userInfo;
     map<string, vector<string> > families;
 
     cout << "Do you want to know extra information about the game? Y/N: " << endl;
@@ -152,6 +158,8 @@ int main() {
 
     if(extraInfo == "Y" || extraInfo == "y"){ //checks to see if the users wants to see extra information about the game
         userInfo = true;
+    } else {
+        userInfo = false;
     }
 
     cout << "How long is the word?" << endl;
