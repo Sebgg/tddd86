@@ -14,7 +14,7 @@ const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
  * it is like the game forgets what has been done before.*/
 
 void initializeGame(int& wordLength, int& guessCnt, char& guessedChar, string& defaultKey, string& chosenWord,
-                    set<char>& guessedLetters, bool& userInfo, map<string, vector<string> > families, vector<string> dictionary,
+                    set<char>& guessedLetters, bool& userInfo, map<string, vector<string> >& families, vector<string>& dictionary,
                     bool& playing);
 
 void playAgain(int& wordLength, int& guessCnt, char& guessedChar, string& defaultKey, string& chosenWord,
@@ -118,17 +118,18 @@ void createFamilies(vector<string>& dictionary, const char& guessedChar, const i
 
 void initDefaultKey(int wordLength, string& defaultKey){
     /*Function used to initialize a basic template key to be used in map of families.*/
-
+    string placeHolder;
     for(int i = 0 ; i < wordLength ; i++){
-        defaultKey += "_";
+        placeHolder += "_";
     }
+    defaultKey = placeHolder;
 }
 
 
 
 
-void play(vector<string> &dictionary, map<string, vector<string> >& families, string& chosenWord,
-          int &guessCnt, char &guessedChar, int &wordLength, string& defaultKey,
+void play(vector<string>& dictionary, map<string, vector<string> >& families, string& chosenWord,
+          int& guessCnt, char &guessedChar, int &wordLength, string& defaultKey,
         set<char> &guessedLetters, bool &userInfo, bool& playing){
     /*runs evil hangman while player still have guesses left.*/
 
@@ -140,7 +141,7 @@ void play(vector<string> &dictionary, map<string, vector<string> >& families, st
 
             while(checkChar(guessedChar, guessedLetters) != true){
                 cout << "Invalid input. Remember, only letters "
-                     << "and do not guess the same letter twice.\n" << endl;
+                     << "and do not guess the same letter twice." << endl;
                 cout << "What's your next guess?" << endl;
                 cin >> guessedChar;
             }
@@ -160,18 +161,19 @@ void play(vector<string> &dictionary, map<string, vector<string> >& families, st
             printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
         }
         if(!checkWin(defaultKey)){
-            cout << "You lose!" << endl;
+            printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
+            cout << "You lose!\n" << endl;
+            playAgain(wordLength, guessCnt, guessedChar, defaultKey, chosenWord, guessedLetters,
+                           userInfo, families, dictionary, playing);
         }
-        playAgain(wordLength, guessCnt, guessedChar, defaultKey, chosenWord, guessedLetters,
-                       userInfo, families, dictionary, playing);
     }
 }
 
 void readDictionary(vector<string> &dictionary, const int &wordLength){
     /*Creates the initial dictionary based on the first guessed letter and dictionary.txt*/
 
-    //ifstream in("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/evilhangman/res/dictionary.txt");  // for OSX
-    ifstream in("dictionary.txt"); // for linux
+    ifstream in("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/evilhangman/res/dictionary.txt");  // for OSX
+    //ifstream in("dictionary.txt"); // for linux
     string wordFromDict;
 
     while(in >> wordFromDict){ //Read each line from dictionary.
@@ -183,12 +185,14 @@ void readDictionary(vector<string> &dictionary, const int &wordLength){
 }
 
 void initializeGame(int& wordLength, int& guessCnt, char& guessedChar, string& defaultKey, string& chosenWord,
-                    set<char>& guessedLetters, bool& userInfo, map<string, vector<string> > families,
-                    vector<string> dictionary, bool& playing){
+                    set<char>& guessedLetters, bool& userInfo, map<string, vector<string> >& families,
+                    vector<string>& dictionary, bool& playing){
     /*Initializes the game and its constants*/
 
     string extraInfo;
     playing = true;
+    guessedLetters.clear();
+    chosenWord = "";
 
     cout << "Do you want to know extra information about the game? Y/N: " << endl;
     cin >> extraInfo;
@@ -202,26 +206,14 @@ void initializeGame(int& wordLength, int& guessCnt, char& guessedChar, string& d
     cout << "How long is the word?" << endl;
     cin >> wordLength;
 
-    while(wordLength < 2 || wordLength > 23){
-        cout << "No word has that length!\n"
-             << "Try between 2 and 23" << endl;
-        cin >> wordLength;
-    }
-
     cout << "How many guesses do you want? (1-26)" << endl;
     cin >> guessCnt;
-
-    while(guessCnt < 1 || guessCnt > 26){
-        cout << "Invalid amount of guesses!\n"
-             << "Please try again" << endl;
-        cin >> guessCnt;
-    }
 
     cout << "What's the first letter you want to guess on?" << endl;
     cin >> guessedChar;
 
-    while(checkChar(guessedChar, guessedLetters) != true){
-        cout << "Invalid input, use only lower case letters in the English alphabet.\n" << endl;
+    while(!checkChar(guessedChar, guessedLetters)){
+        cout << "Invalid input, use only lower case letters in the English alphabet." << endl;
         cout << "What's the first letter you want to guess on?" << endl;
         cin >> guessedChar;
     }
@@ -230,6 +222,11 @@ void initializeGame(int& wordLength, int& guessCnt, char& guessedChar, string& d
     guessedLetters.insert(guessedChar);
 
     readDictionary(dictionary, wordLength);
+    while(dictionary.empty()){
+        cout << "There aren't any words of that length in the dictionary, try again!" << endl;
+        cin >> wordLength;
+        readDictionary(dictionary, wordLength);
+    }
     initDefaultKey(wordLength, defaultKey);
     createFamilies(dictionary, guessedChar, wordLength, families, defaultKey, chosenWord);
     printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
