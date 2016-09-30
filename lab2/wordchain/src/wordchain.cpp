@@ -13,7 +13,7 @@ void printCorrectStack(stack<string> &correctStack, string &w1, string &w2){
 
     cout << "Chain from " << w2 << " back to " <<  w1 << ":" << endl;
     while(!correctStack.empty()){
-        cout << correctStack.top() << " " << flush;
+        cout << correctStack.top() << " ";// << flush;
         /*Since we don't want to jump down one line we use flush.
          *Flush is a std function used to make sure output gets sent to
          *the terminal. endl does this too but also moves down one line.*/
