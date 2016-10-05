@@ -19,7 +19,7 @@ void initializeGame(int& wordLength, int& guessCnt, char& guessedChar, string& d
 
 void playAgain(int& wordLength, int& guessCnt, char& guessedChar, string& defaultKey, string& chosenWord,
                     set<char>& guessedLetters, bool& userInfo, map<string, vector<string> > families,
-                    vector<string> dictionary, bool& playing){
+                    vector<string>& dictionary, bool& playing){
     string playAgain;
     cout << "Do you want to play again? Y/N" << endl;
     cin >> playAgain;
@@ -163,6 +163,7 @@ void play(vector<string>& dictionary, map<string, vector<string> >& families, st
         if(!checkWin(defaultKey)){
             printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
             cout << "You lose!\n" << endl;
+            cout << "My word was " << dictionary.front() << endl;
             playAgain(wordLength, guessCnt, guessedChar, defaultKey, chosenWord, guessedLetters,
                            userInfo, families, dictionary, playing);
         }
@@ -172,8 +173,8 @@ void play(vector<string>& dictionary, map<string, vector<string> >& families, st
 void readDictionary(vector<string> &dictionary, const int &wordLength){
     /*Creates the initial dictionary based on the first guessed letter and dictionary.txt*/
 
-    ifstream in("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/evilhangman/res/dictionary.txt");  // for OSX
-    //ifstream in("dictionary.txt"); // for linux
+    //ifstream in("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/evilhangman/res/dictionary.txt");  // for OSX
+    ifstream in("dictionary.txt"); // for linux
     string wordFromDict;
 
     while(in >> wordFromDict){ //Read each line from dictionary.
