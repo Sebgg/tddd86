@@ -5,35 +5,51 @@
 // TODO: remove this comment header
 
 #include "TileList.h"
+using namespace TileList;
+using namespace std;
 
 TileList::TileList()
 {
-    // TODO: write this member
+    array<Tile, 10> tileList;
 }
 
 TileList::~TileList()
 {
-    // TODO: write this member
+    delete[] tileList;
 }
 
 void TileList::addTile(Tile tile)
 {
-    // TODO: write this member
+    tileList[tileList.size()] = tile;
 }
 
 void TileList::drawAll(QGraphicsScene* scene)
 {
-    // TODO: write this member
+    for(auto const& tile : tileList) {
+        tile.draw(scene);
+    }
 }
 
 int TileList::indexOfTopTile(int x, int y)
 {
-    // TODO: write this member
+    for(int i = tileList.size()-1; i >= 0; i--){
+        if(tileList[i].contains(x, y)){
+            return i;
+        }
+    }
+    return -1;
 }
 
 void TileList::raise(int x, int y)
 {
-    // TODO: write this member
+    int index = indexOfTopTile(x, y);
+    if(index != -1){
+        Tile found = tileList[index];
+        for(int i = index+1; i < tileList.size(); i++){
+            tileList[i-1] = tileList[i];
+        }
+        tileList.back() = found;
+    }
 }
 
 void TileList::lower(int x, int y)

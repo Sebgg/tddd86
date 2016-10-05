@@ -162,7 +162,7 @@ void play(vector<string>& dictionary, map<string, vector<string> >& families, st
         }
         if(!checkWin(defaultKey)){
             printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
-            cout << "You lose!\n" << endl;
+            cout << "You lose!" << endl;
             cout << "My word was " << dictionary.front() << endl;
             playAgain(wordLength, guessCnt, guessedChar, defaultKey, chosenWord, guessedLetters,
                            userInfo, families, dictionary, playing);
