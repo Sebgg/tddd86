@@ -54,12 +54,23 @@ void TileList::raise(int x, int y)
 
 void TileList::lower(int x, int y)
 {
-    // TODO: write this member
+    int index = indexOfTopTile(x, y);
+    if(index != -1){
+        Tile found = tileList[index];
+        for(int i = 1; i < index; i++){
+            tileList[i] = tileList[i-1];
+        }
+        tileList.front() = found;
+    }
 }
 
 void TileList::remove(int x, int y)
 {
-    // TODO: write this member
+    int index = indexOfTopTile(x, y);
+    if(index != -1){
+        lower(x, y); //To get the element to remove first in the array
+        
+    }
 }
 
 void TileList::removeAll(int x, int y)
