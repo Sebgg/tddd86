@@ -17,6 +17,7 @@ void initializeGame(int& wordLength, int& guessCnt, char& guessedChar, string& d
                     set<char>& guessedLetters, bool& userInfo, map<string, vector<string> >& families, vector<string>& dictionary,
                     bool& playing);
 
+
 void playAgain(int& wordLength, int& guessCnt, char& guessedChar, string& defaultKey, string& chosenWord,
                     set<char>& guessedLetters, bool& userInfo, map<string, vector<string> > families,
                     vector<string>& dictionary, bool& playing){
@@ -24,6 +25,7 @@ void playAgain(int& wordLength, int& guessCnt, char& guessedChar, string& defaul
     cout << "Do you want to play again? Y/N" << endl;
     cin >> playAgain;
     if(playAgain == "Y" || playAgain == "y"){
+        dictionary.clear();
         initializeGame(wordLength, guessCnt, guessedChar, defaultKey, chosenWord, guessedLetters,
                        userInfo, families, dictionary, playing);
     } else {
@@ -32,16 +34,15 @@ void playAgain(int& wordLength, int& guessCnt, char& guessedChar, string& defaul
     }
 }
 
-bool checkChar(const char &guessedChar, set<char>& guessedLetters){
+bool checkChar(const char &guessedChar, const set<char>& guessedLetters){
     /*Makes sure the guessed character is in the alphabet and has not been used earlier*/
-    bool notRight = false;
 
     for(auto const& character : ALPHABET){
         if(guessedChar == character && guessedLetters.find(guessedChar) == guessedLetters.end()){
-            notRight = true;
+            return true;
         }
     }
-    return notRight;
+    return false;
 }
 
 bool checkWin(const string& defaultKey){
@@ -82,8 +83,12 @@ void showFamilies(const map<string, vector<string> >& families){
     }
 }
 
+void showExtraInfo(const vector<string>& dictionary){
+    cout << "Words to choose from: " << dictionary.size() << endl;
+}
+
 void printGameStatus(const string& chosenWord, const int& guessCnt, const map<string, vector<string> >& families,
-                     const set<char>& guessedLetters, const bool& userInfo){
+                     const set<char>& guessedLetters, const bool& userInfo, const vector<string>& dictionary){
     /*Shows all the usefull information */
 
     cout << "Word: " << chosenWord << "\n"
@@ -94,7 +99,8 @@ void printGameStatus(const string& chosenWord, const int& guessCnt, const map<st
     }
     cout << endl;
     if(userInfo){
-        showFamilies(families);
+        //showFamilies(families);
+        showExtraInfo(dictionary);
     }
 }
 
@@ -125,7 +131,8 @@ void initDefaultKey(int wordLength, string& defaultKey){
     defaultKey = placeHolder;
 }
 
-
+void decreaseGuessCount(const string& defaultKey){
+}
 
 
 void play(vector<string>& dictionary, map<string, vector<string> >& families, string& chosenWord,
@@ -149,7 +156,7 @@ void play(vector<string>& dictionary, map<string, vector<string> >& families, st
             guessedLetters.insert(guessedChar);
             createFamilies(dictionary, guessedChar, wordLength, families, defaultKey, chosenWord);
             if(checkWin(defaultKey)){
-                printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
+                printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo, dictionary);
                 cout << "Congratulations, you beat me!\n" << endl;
                 playAgain(wordLength, guessCnt, guessedChar, defaultKey, chosenWord, guessedLetters,
                                userInfo, families, dictionary, playing);
@@ -158,10 +165,10 @@ void play(vector<string>& dictionary, map<string, vector<string> >& families, st
               guessCnt--;
             }
             //In the end of the while-loop for decrementing the number of guesses.
-            printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
+            printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo, dictionary);
         }
         if(!checkWin(defaultKey)){
-            printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
+            printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo, dictionary);
             cout << "You lose!" << endl;
             cout << "My word was " << dictionary.front() << endl;
             playAgain(wordLength, guessCnt, guessedChar, defaultKey, chosenWord, guessedLetters,
@@ -171,10 +178,10 @@ void play(vector<string>& dictionary, map<string, vector<string> >& families, st
 }
 
 void readDictionary(vector<string> &dictionary, const int &wordLength){
-    /*Creates the initial dictionary based on the first guessed letter and dictionary.txt*/
+    /*Creates the initial dictionary based on the word length letter and dictionary.txt*/
 
-    //ifstream in("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/evilhangman/res/dictionary.txt");  // for OSX
-    ifstream in("dictionary.txt"); // for linux
+    ifstream in("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/evilhangman/res/dictionary.txt");  // for OSX
+    //ifstream in("dictionary.txt"); // for linux
     string wordFromDict;
 
     while(in >> wordFromDict){ //Read each line from dictionary.
@@ -207,6 +214,13 @@ void initializeGame(int& wordLength, int& guessCnt, char& guessedChar, string& d
     cout << "How long is the word?" << endl;
     cin >> wordLength;
 
+    readDictionary(dictionary, wordLength);
+    while(dictionary.empty()){
+        cout << "There aren't any words of that length in the dictionary, try again!" << endl;
+        cin >> wordLength;
+        readDictionary(dictionary, wordLength);
+    }
+
     cout << "How many guesses do you want? (1-26)" << endl;
     cin >> guessCnt;
 
@@ -222,15 +236,9 @@ void initializeGame(int& wordLength, int& guessCnt, char& guessedChar, string& d
     guessCnt--;
     guessedLetters.insert(guessedChar);
 
-    readDictionary(dictionary, wordLength);
-    while(dictionary.empty()){
-        cout << "There aren't any words of that length in the dictionary, try again!" << endl;
-        cin >> wordLength;
-        readDictionary(dictionary, wordLength);
-    }
     initDefaultKey(wordLength, defaultKey);
     createFamilies(dictionary, guessedChar, wordLength, families, defaultKey, chosenWord);
-    printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo);
+    printGameStatus(chosenWord, guessCnt, families, guessedLetters, userInfo, dictionary);
 }
 
 
