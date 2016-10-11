@@ -8,7 +8,7 @@ using namespace std;
 
 const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
 
-void printCorrectStack(stack<string> &correctStack, string &w1, string &w2){
+void printCorrectStack(stack<string> &correctStack, const string &w1, const string &w2){
     /*Prints the wordchain when the correct one is found.*/
 
     cout << "Chain from " << w2 << " back to " <<  w1 << ":" << endl;
@@ -94,7 +94,6 @@ int main() {
     cout << "Please type two words: ";
     cin >> word1 >> word2;
     int wordLength = word1.length();
-    cout << wordLength << endl;
     createDictionary(dictionary, wordLength);
     if(dictionary.count(word1) == 0 && dictionary.count(word2) == 0){
         cout << "Neither of the words are in the dictionary" << endl;
