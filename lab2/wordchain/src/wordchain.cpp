@@ -44,12 +44,14 @@ void findNeighbours(stack<string> &stackToCheck, queue<stack<string> > &wordQueu
     }
 }
 
-void createDictionary(set<string> &dictionary){
-    ifstream input("dictionary.txt");
+void createDictionary(set<string> &dictionary, const unsigned int& wordLength){
+    ifstream input("/Users/Hampus/Documents/C++/Qt Projects/tddd86/lab2/wordchain/res/dictionary.txt");
     string wordFromDict;
 
     while(input >> wordFromDict){ //Read each line from dictionary.
-        dictionary.insert(wordFromDict);
+        if(wordFromDict.length() == wordLength){
+            dictionary.insert(wordFromDict);
+        }
     }
     input.close();
 }
@@ -89,9 +91,11 @@ int main() {
 
     string word1, word2;
     set<string> dictionary;
-    createDictionary(dictionary);
     cout << "Please type two words: ";
     cin >> word1 >> word2;
+    int wordLength = word1.length();
+    cout << wordLength << endl;
+    createDictionary(dictionary, wordLength);
     if(dictionary.count(word1) == 0 && dictionary.count(word2) == 0){
         cout << "Neither of the words are in the dictionary" << endl;
         return 0;
