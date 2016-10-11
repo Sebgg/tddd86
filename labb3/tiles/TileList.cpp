@@ -5,35 +5,36 @@
 // TODO: remove this comment header
 
 #include "TileList.h"
-using namespace TileList;
 using namespace std;
 
 TileList::TileList()
 {
-    array<Tile, 10> tileList;
+    tileList = new array<Tile, 10>;
 }
 
 TileList::~TileList()
 {
-    delete[] tileList;
+    delete[] this->tileList;
 }
 
 void TileList::addTile(Tile tile)
 {
-    tileList[tileList.size()] = tile;
+    tileList->at(tileList->size()) = tile;
 }
 
 void TileList::drawAll(QGraphicsScene* scene)
 {
-    for(auto const& tile : tileList) {
+    for(unsigned int i = 0; i < tileList->size()-1; i++) {
+        Tile tile = tileList->at(i);
         tile.draw(scene);
     }
 }
 
 int TileList::indexOfTopTile(int x, int y)
 {
-    for(int i = tileList.size()-1; i >= 0; i--){
-        if(tileList[i].contains(x, y)){
+    for(int i = tileList->size()-1; i >= 0; i--){
+        Tile temp = tileList->at(i);
+        if(temp.contains(x, y)){
             return i;
         }
     }
@@ -44,11 +45,11 @@ void TileList::raise(int x, int y)
 {
     int index = indexOfTopTile(x, y);
     if(index != -1){
-        Tile found = tileList[index];
-        for(int i = index+1; i < tileList.size(); i++){
+        Tile found = tileList->at(index);
+        for(unsigned int i = index+1; i < tileList->size(); i++){
             tileList[i-1] = tileList[i];
         }
-        tileList.back() = found;
+        tileList->back() = found;
     }
 }
 
@@ -56,24 +57,28 @@ void TileList::lower(int x, int y)
 {
     int index = indexOfTopTile(x, y);
     if(index != -1){
-        Tile found = tileList[index];
-        for(int i = 1; i < index; i++){
+        Tile found = tileList->at(index);
+        for(int i = index; i > 0; i--){
             tileList[i] = tileList[i-1];
         }
-        tileList.front() = found;
+        tileList->front() = found;
     }
 }
 
 void TileList::remove(int x, int y)
 {
     int index = indexOfTopTile(x, y);
-    if(index != -1){
-        lower(x, y); //To get the element to remove first in the array
-        
+    if(index != -1 && index != tileList->size()-1){
+        for(unsigned int i = index+1; i < tileList->size(); i++){
+            tileList[i-1] = tileList[i];
+        }
+        tileList[(tileList->size())-1] = nullptr;
     }
 }
 
 void TileList::removeAll(int x, int y)
 {
-    // TODO: write this member
+    while(indexOfTopTile(x, y) != -1){
+        this->remove(x, y);
+    }
 }

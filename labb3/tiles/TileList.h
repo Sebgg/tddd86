@@ -21,8 +21,11 @@ public:
     void raise(int x, int y);
     void remove(int x, int y);
     void removeAll(int x, int y);
+    array<Tile, 10> *tileList;
 
 private:
+
+
 
 };
 
