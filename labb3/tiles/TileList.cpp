@@ -9,7 +9,16 @@ using namespace std;
 
 TileList::TileList()
 {
-    tileList = new array<Tile, 10>;
+    /*I was thinking, should we create a pointer to an array filled with pointers?
+    * This would mean we could point each pointer to a tile object and when removing
+    * we would simply set pointer to nullptr!
+    *
+    * To create a pointer to a pointer we simply use '**' in front of what should
+    * should be interpreted as a pointer to another pointer:
+    *
+    * Tile **array = new Tile*[capacity]
+    */
+    tileList = new array<Tile, capacity>;
 }
 
 TileList::~TileList()
