@@ -11,7 +11,7 @@
 
 Tour::Tour()
 {
-    clear();
+    head = nullptr;
 }
 
 Tour::~Tour()
@@ -21,17 +21,33 @@ Tour::~Tour()
 
 void Tour::show()
 {
-    
+    Node * curr = head->next;
+    while(curr->next != nullptr){
+        cout << curr->point.toString() << endl;
+        curr = curr->next;
+    }
+    delete curr;
 }
 
 void Tour::draw(QGraphicsScene *scene)
 {
-    // TODO: write this member
+    Node *curr = head->next;
+    while(curr->next != nullptr){
+        curr->point.draw(scene);
+        curr = curr->next;
+    }
+    delete curr;
 }
 
 int Tour::size()
 {
-    // TODO: write this member
+    int t_size;
+    Node *curr = head->next;
+    while(curr->next != nullptr){
+        t_size += 1;
+        curr = curr->next;
+    }
+    return t_size;
 }
 
 double Tour::distance()
@@ -49,20 +65,13 @@ void Tour::insertSmallest(Point p)
     // TODO: write this member
 }
 
-void deleteNode(Node curr)
+void deleteNode(Node *curr)
 {
-    if(curr->next == nullptr){
+    if(curr->next == *head){
         delete curr;
     } else {
-        curr = nodeList->next;
+        curr = curr->next;
         deleteNode(curr);
         delete curr;
     }
-}
-
-void clear()
-{
-    current = tail = new Node(null, null);
-    head = new Node(null, tail);
-    size = 0;
 }

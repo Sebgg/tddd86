@@ -23,13 +23,8 @@ public:
     void insertSmallest(Point p);
 
 private:
-    int size;
-    Node *nodeList;
-    void deleteNode();
-    Node head;
-    Node tail;
-    Node current;
-    void clear();
+    void deleteNode(Node *curr);
+    Node *head;
 
 };
 
