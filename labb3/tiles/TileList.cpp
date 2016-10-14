@@ -30,7 +30,7 @@ void TileList::drawAll(QGraphicsScene* scene)
     }
 }
 
-int TileList::indexOfTopTile(int x, int y)
+int TileList::indexOfTopTile(const int x, const int y)
 {
     for(int i = size; i >= 0; i--){
         Tile temp = tileList[i];
@@ -41,7 +41,7 @@ int TileList::indexOfTopTile(int x, int y)
     return -1;
 }
 
-void TileList::raise(int x, int y)
+void TileList::raise(const int x, const int y)
 {
     int index = indexOfTopTile(x, y);
     if(index != -1){
@@ -53,7 +53,7 @@ void TileList::raise(int x, int y)
     }
 }
 
-void TileList::lower(int x, int y)
+void TileList::lower(const int x, const int y)
 {
     int index = indexOfTopTile(x, y);
     if(index != -1){
@@ -65,7 +65,7 @@ void TileList::lower(int x, int y)
     }
 }
 
-void TileList::remove(int x, int y)
+void TileList::remove(const int x, const int y)
 {
     int index = indexOfTopTile(x, y);
     if(index != -1 && index != size){
@@ -76,7 +76,7 @@ void TileList::remove(int x, int y)
     size--;
 }
 
-void TileList::removeAll(int x, int y)
+void TileList::removeAll(const int x, const int y)
 {
     while(indexOfTopTile(x, y) != -1){
         this->remove(x, y);
