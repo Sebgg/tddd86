@@ -15,7 +15,7 @@ TileList::~TileList()
     delete[] this->tileList;
 }
 
-void TileList::addTile(Tile tile)
+void TileList::addTile(const Tile tile)
 {
     checkResize();
     tileList[size] = tile;

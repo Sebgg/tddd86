@@ -11,17 +11,17 @@
 
 Tour::Tour()
 {
-    // TODO: write this member
+    clear();
 }
 
 Tour::~Tour()
 {
-    // TODO: write this member
+    deleteNode(head);
 }
 
 void Tour::show()
 {
-    // TODO: write this member
+    
 }
 
 void Tour::draw(QGraphicsScene *scene)
@@ -47,4 +47,22 @@ void Tour::insertNearest(Point p)
 void Tour::insertSmallest(Point p)
 {
     // TODO: write this member
+}
+
+void deleteNode(Node curr)
+{
+    if(curr->next == nullptr){
+        delete curr;
+    } else {
+        curr = nodeList->next;
+        deleteNode(curr);
+        delete curr;
+    }
+}
+
+void clear()
+{
+    current = tail = new Node(null, null);
+    head = new Node(null, tail);
+    size = 0;
 }
