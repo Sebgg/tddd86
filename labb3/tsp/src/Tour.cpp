@@ -26,7 +26,7 @@ void Tour::show()
         cout << curr->point.toString() << endl;
         curr = curr->next;
     }
-    delete curr;
+    //delete curr;
 }
 
 void Tour::draw(QGraphicsScene *scene)
@@ -36,7 +36,7 @@ void Tour::draw(QGraphicsScene *scene)
         curr->point.draw(scene);
         curr = curr->next;
     }
-    delete curr;
+    //delete curr;
 }
 
 int Tour::size()
@@ -69,6 +69,7 @@ void Tour::insertNearest(Point p)
         Node *newNode = new Node(p);
         newNode->next = newNode;
         head = newNode; //Do I need a reference to head?
+        cout << newNode->point.toString() << endl;
     }
     else{
         Node *nearestNode = curr;
@@ -85,15 +86,17 @@ void Tour::insertNearest(Point p)
         Node *newNode = new Node(p);
         newNode->next = tempPtr;
         nearestNode->next = newNode;
+        newNode->point.drawTo(nearestNode->point, scene);
+        cout << newNode->point.toString() << endl;
     }
 }
 
 void Tour::insertSmallest(Point p)
 {
-    // TODO: write this member
+
 }
 
-void deleteNode(Node *curr, Node *head)
+void Tour::deleteNode(Node *curr, Node *head)
 {
     if(curr->next == head){
         delete curr;
