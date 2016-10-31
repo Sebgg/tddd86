@@ -16,13 +16,13 @@ Tour::Tour()
 
 Tour::~Tour()
 {
-    deleteNode(head);
+    deleteNode(head, head);
 }
 
 void Tour::show()
 {
-    Node * curr = head->next;
-    while(curr->next != nullptr){
+    Node *curr = head;
+    while(curr->next != head){
         cout << curr->point.toString() << endl;
         curr = curr->next;
     }
@@ -31,8 +31,8 @@ void Tour::show()
 
 void Tour::draw(QGraphicsScene *scene)
 {
-    Node *curr = head->next;
-    while(curr->next != nullptr){
+    Node *curr = head;
+    while(curr->next != head){
         curr->point.draw(scene);
         curr = curr->next;
     }
@@ -41,9 +41,9 @@ void Tour::draw(QGraphicsScene *scene)
 
 int Tour::size()
 {
-    int t_size;
-    Node *curr = head->next;
-    while(curr->next != nullptr){
+    int t_size = 0;
+    Node *curr = head;
+    while(curr->next != head){
         t_size += 1;
         curr = curr->next;
     }
@@ -52,12 +52,40 @@ int Tour::size()
 
 double Tour::distance()
 {
-    // TODO: write this member
+    double totalDistance = 0;
+    Node *curr = head;
+    while(curr->next != head){
+        totalDistance += curr->point.distanceTo(curr->next->point);
+    }
+    return totalDistance;
 }
+
 
 void Tour::insertNearest(Point p)
 {
-    // TODO: write this member
+    Node *curr = head;
+
+    if(curr == nullptr){
+        Node *newNode = new Node(p);
+        newNode->next = newNode;
+        head = newNode; //Do I need a reference to head?
+    }
+    else{
+        Node *nearestNode = curr;
+        double smallestDistance = 0;
+        while(curr->next != head){
+           double currDistance = p.distanceTo(curr->point);
+           if(currDistance < smallestDistance || smallestDistance == 0){
+               nearestNode = curr;
+               smallestDistance = currDistance;
+           }
+           curr = curr->next;
+        }
+        Node* tempPtr = nearestNode->next;
+        Node *newNode = new Node(p);
+        newNode->next = tempPtr;
+        nearestNode->next = newNode;
+    }
 }
 
 void Tour::insertSmallest(Point p)
@@ -65,13 +93,18 @@ void Tour::insertSmallest(Point p)
     // TODO: write this member
 }
 
-void deleteNode(Node *curr)
+void deleteNode(Node *curr, Node *head)
 {
-    if(curr->next == *head){
+    if(curr->next == head){
         delete curr;
     } else {
         curr = curr->next;
-        deleteNode(curr);
+        //will this cause a collapse when reaching head again?
+        //think edge-case:
+        //curr->next = head value
+        //goes into loop detects head and deletes curr.
+        //collapses back here and deletes curr again?
+        deleteNode(curr, head);
         delete curr;
     }
 }
