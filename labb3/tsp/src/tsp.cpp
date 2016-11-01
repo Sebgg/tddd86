@@ -18,10 +18,11 @@
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    string filename = "tsp10.txt";
+    string filename = "tsp1000.txt";
     ifstream input;
-    input.open("/Users/Hampus/Documents/C++/Qt Projects/tddd86/labb3/tsp/res/"+filename); //MAC
-    //input.open(filename); // Normal
+    //input.open("/Users/Hampus/Documents/C++/Qt Projects/tddd86/labb3/tsp/res/"+filename); //MAC
+
+    input.open(filename); // Normal
 
     // get dimensions
     int width;
@@ -44,7 +45,9 @@ int main(int argc, char *argv[]) {
     while (input >> x >> y) {
         Point p(x, y);
         tour.insertNearest(p);
-        tour.draw(scene);
+        //tour.draw(scene);
+        //Why draw the whole tour every time we add a point?
+        //Isn't the point to call draw when it's done?
         std::chrono::milliseconds dura(50);
         std::this_thread::sleep_for(dura);
         a.processEvents();
@@ -59,4 +62,15 @@ int main(int argc, char *argv[]) {
     // draw tour
     tour.draw(scene);
     return a.exec(); // start Qt event loop
+    // setup graphical window
+
+   /* Point p(100.0, 100.0);
+    Point q(500.0, 100.0);
+    Point r(500.0, 500.0);
+    Point s(100.0, 500.0);
+
+    Tour squareTour(p,q,r,s);
+    squareTour.show();
+    cout << squareTour.size() << endl;
+    cout << squareTour.distance() << endl;*/
 }

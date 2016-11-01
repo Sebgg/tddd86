@@ -11,61 +11,78 @@
 
 Tour::Tour()
 {
+    /*Node *p = new Node(a);
+    Node *q = new Node(b);
+    Node *r = new Node(c);
+    Node *s = new Node(d);
+    head = p;
+    p->next = q;
+    q->next = r;
+    r->next = s;
+    s->next = p;*/
     head = nullptr;
 }
 
 Tour::~Tour()
 {
-    //deleteNode(head, head);
+    deleteNode(head->next, head);
 }
 
 void Tour::show()
 {
-    Node *curr = head;
-    while(curr->next != head){
-        cout << curr->point.toString() << endl;
-        curr = curr->next;
+    if(head != nullptr){
+        cout << head->point.toString() << endl;
+        Node *curr = head->next;
+        while(curr != head){
+            cout << curr->point.toString() << endl;
+            curr = curr->next;
+        }
     }
-    //delete curr;
 }
 
 void Tour::draw(QGraphicsScene *scene)
 {
-    Node *curr = head;
-    while(curr->next != head){
-        curr->point.draw(scene);
-        curr->point.drawTo(curr->next->point, scene);
-        curr = curr->next;
+    if(head != nullptr){
+        head->point.draw(scene);
+        head->point.drawTo(head->next->point, scene);
+        Node *curr = head->next;
+        while(curr != head){
+            curr->point.draw(scene);
+            curr->point.drawTo(curr->next->point, scene);
+            curr = curr->next;
+        }
     }
-    //delete curr;
 }
 
 int Tour::size()
 {
-    int t_size = 0;
-    Node *curr = head;
-    while(curr->next != head){
-        t_size += 1;
-        curr = curr->next;
+    if(head != nullptr){
+        int t_size = 1;
+        Node *curr = head->next;
+        while(curr != head){
+            t_size += 1;
+            curr = curr->next;
+        }
+        return t_size;
     }
-    return t_size;
 }
 
 double Tour::distance()
 {
-    double totalDistance = 0;
-    Node *curr = head;
-    while(curr->next != head){
-        totalDistance += curr->point.distanceTo(curr->next->point);
-        curr = curr->next;
+    if(head != nullptr){
+        double totalDistance = head->point.distanceTo(head->next->point);;
+        Node *curr = head->next;
+        while(curr != head){
+            totalDistance += curr->point.distanceTo(curr->next->point);
+            curr = curr->next;
+        }
+        return totalDistance;
     }
-    return totalDistance;
 }
 
 
 void Tour::insertNearest(Point p)
 {
-
     if(head == nullptr){
         Node *newNode = new Node(p);
         newNode->next = newNode;
@@ -73,9 +90,9 @@ void Tour::insertNearest(Point p)
     }
     else{
         Node *nearestNode = head;
-        Node *curr = head;
+        Node *curr = head->next;
         double shortestDistance = nearestNode->point.distanceTo(p);
-        while(curr->next != head){
+        while(curr != head){
            double currDistance = p.distanceTo(curr->point);
            if(currDistance < shortestDistance){
                nearestNode = curr;
@@ -96,16 +113,16 @@ void Tour::insertSmallest(Point p)
 
 void Tour::deleteNode(Node *curr, Node *head)
 {
-    if(curr->next == head){
+    if(curr == head){
         delete curr;
     } else {
-        curr = curr->next;
+        Node *nextNode = curr->next;
         //will this cause a collapse when reaching head again?
         //think edge-case:
         //curr->next = head value
         //goes into loop detects head and deletes curr.
         //collapses back here and deletes curr again?
-        deleteNode(curr, head);
+        deleteNode(nextNode, head);
         delete curr;
     }
 }
