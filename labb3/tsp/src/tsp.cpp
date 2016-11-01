@@ -20,9 +20,9 @@ int main(int argc, char *argv[]) {
 
     string filename = "tsp1000.txt";
     ifstream input;
-    //input.open("/Users/Hampus/Documents/C++/Qt Projects/tddd86/labb3/tsp/res/"+filename); //MAC
+    input.open("/Users/Hampus/Documents/C++/Qt Projects/tddd86/labb3/tsp/res/"+filename); //MAC
 
-    input.open(filename); // Normal
+    //input.open(filename); // Normal
 
     // get dimensions
     int width;

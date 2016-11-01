@@ -65,6 +65,7 @@ int Tour::size()
         }
         return t_size;
     }
+    return -1;
 }
 
 double Tour::distance()
@@ -78,6 +79,7 @@ double Tour::distance()
         }
         return totalDistance;
     }
+    return -1;
 }
 
 
@@ -108,7 +110,26 @@ void Tour::insertNearest(Point p)
 
 void Tour::insertSmallest(Point p)
 {
-
+    if(head == nullptr){
+        Node *newNode = new Node(p);
+        newNode->next = newNode;
+        head = newNode;
+    }
+    else{
+        Node *nearestNode = head;
+        Node *curr = head->next;
+        double minimumTotal = nearestNode->point.distanceTo(p); //Default
+        while(curr != head){
+           //We want to place the node where ever it makes the least difference i distance.
+           //That means. Measure what the distance is without node, and then with.
+           //Put the node in the place where the difference is at minimum value.
+           }
+           curr = curr->next;
+        }
+        Node *newNode = new Node(p);
+        newNode->next = nearestNode->next;
+        nearestNode->next = newNode;
+    }
 }
 
 void Tour::deleteNode(Node *curr, Node *head)
