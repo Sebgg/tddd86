@@ -16,7 +16,7 @@ Tour::Tour()
 
 Tour::~Tour()
 {
-    deleteNode(head, head);
+    //deleteNode(head, head);
 }
 
 void Tour::show()
@@ -34,6 +34,7 @@ void Tour::draw(QGraphicsScene *scene)
     Node *curr = head;
     while(curr->next != head){
         curr->point.draw(scene);
+        curr->point.drawTo(curr->next->point, scene);
         curr = curr->next;
     }
     //delete curr;
@@ -56,6 +57,7 @@ double Tour::distance()
     Node *curr = head;
     while(curr->next != head){
         totalDistance += curr->point.distanceTo(curr->next->point);
+        curr = curr->next;
     }
     return totalDistance;
 }
@@ -63,31 +65,27 @@ double Tour::distance()
 
 void Tour::insertNearest(Point p)
 {
-    Node *curr = head;
 
-    if(curr == nullptr){
+    if(head == nullptr){
         Node *newNode = new Node(p);
         newNode->next = newNode;
-        head = newNode; //Do I need a reference to head?
-        cout << newNode->point.toString() << endl;
+        head = newNode;
     }
     else{
-        Node *nearestNode = curr;
-        double smallestDistance = 0;
+        Node *nearestNode = head;
+        Node *curr = head;
+        double shortestDistance = nearestNode->point.distanceTo(p);
         while(curr->next != head){
            double currDistance = p.distanceTo(curr->point);
-           if(currDistance < smallestDistance || smallestDistance == 0){
+           if(currDistance < shortestDistance){
                nearestNode = curr;
-               smallestDistance = currDistance;
+               shortestDistance = currDistance;
            }
            curr = curr->next;
         }
-        Node* tempPtr = nearestNode->next;
         Node *newNode = new Node(p);
-        newNode->next = tempPtr;
-        nearestNode->next = newNode;
-        newNode->point.drawTo(nearestNode->point, scene);
-        cout << newNode->point.toString() << endl;
+        newNode->next = nearestNode->next;
+        nearestNode->next = newNode; 
     }
 }
 
