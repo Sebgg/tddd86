@@ -56,7 +56,7 @@ int Tour::size()
         }
         return t_size;
     }
-    return -1;
+    return 0;
 }
 
 double Tour::distance()
@@ -70,7 +70,7 @@ double Tour::distance()
         }
         return totalDistance;
     }
-    return -1;
+    return 0;
 }
 
 

@@ -1,3 +1,7 @@
+/*
+ * This file contains the declaration of the tour class.
+ * See tour.cpp for implementation of each member.
+ */
 #ifndef TOUR_H
 #define TOUR_H
 

@@ -18,7 +18,7 @@
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    string filename = "tsp100.txt";
+    string filename = "tsp10.txt";
     ifstream input;
     //input.open("/Users/Hampus/Documents/C++/Qt Projects/tddd86/labb3/tsp/res/"+filename); //MAC
 
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     double y;
     while (input >> x >> y) {
         Point p(x, y);
-        tour.insertSmallest(p);
+        tour.insertNearest(p);
         //tour.draw(scene);
         //Why draw the whole tour every time we add a point?
         //Isn't the point to call draw when it's done?
