@@ -1,31 +1,17 @@
-// This is the .cpp file you will edit and turn in.
-// We have provided a skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own.
-// TODO: remove this comment header
-
 #include <iostream>
 #include "Tour.h"
 #include "Node.h"
 #include "Point.h"
 
+/**/
 Tour::Tour()
 {
-    /*Node *p = new Node(a);
-    Node *q = new Node(b);
-    Node *r = new Node(c);
-    Node *s = new Node(d);
-    head = p;
-    p->next = q;
-    q->next = r;
-    r->next = s;
-    s->next = p;*/
     head = nullptr;
 }
 
 Tour::~Tour()
 {
-    deleteNode(head->next, head);
+    deleteTour(head->next, head);
 }
 
 void Tour::show()
@@ -110,40 +96,52 @@ void Tour::insertNearest(Point p)
 
 void Tour::insertSmallest(Point p)
 {
+    Node *newNode = new Node(p);
+
     if(head == nullptr){
-        Node *newNode = new Node(p);
         newNode->next = newNode;
         head = newNode;
     }
     else{
         Node *nearestNode = head;
         Node *curr = head->next;
-        double minimumTotal = nearestNode->point.distanceTo(p); //Default
+
+        double currDistance = 0;
+        double origDistance = nearestNode->point.distanceTo(curr->point);
+        double minDistance = nearestNode->point.distanceTo(newNode->point)
+                + newNode->point.distanceTo(curr->point);
+        minDistance -= origDistance;
+
         while(curr != head){
-           //We want to place the node where ever it makes the least difference i distance.
-           //That means. Measure what the distance is without node, and then with.
-           //Put the node in the place where the difference is at minimum value.
-           }
-           curr = curr->next;
+            origDistance = curr->point.distanceTo(curr->next->point);
+            newNode->next = curr->next;
+            curr->next = newNode;
+
+            currDistance = curr->point.distanceTo(newNode->point)
+                    + newNode->point.distanceTo(newNode->next->point);
+            currDistance -= origDistance;
+
+            if(currDistance < minDistance){
+               minDistance = currDistance;
+               nearestNode = curr;
+            }
+            curr->next = newNode->next;
+            curr = curr->next;
         }
-        Node *newNode = new Node(p);
         newNode->next = nearestNode->next;
         nearestNode->next = newNode;
     }
 }
 
-void Tour::deleteNode(Node *curr, Node *head)
+void Tour::deleteTour(Node *curr, Node *head)
 {
     if(curr == head){
         delete curr;
     } else {
         Node *nextNode = curr->next;
-        //will this cause a collapse when reaching head again?
-        //think edge-case:
-        //curr->next = head value
-        //goes into loop detects head and deletes curr.
-        //collapses back here and deletes curr again?
-        deleteNode(nextNode, head);
+        deleteTour(nextNode, head);
         delete curr;
     }
 }
+
+

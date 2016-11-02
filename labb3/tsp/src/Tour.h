@@ -17,7 +17,7 @@ public:
     void insertSmallest(Point p);
 
 private:
-    void deleteNode(Node *curr, Node *head);
+    void deleteTour(Node *curr, Node *head);
     Node *head;
 
 };
