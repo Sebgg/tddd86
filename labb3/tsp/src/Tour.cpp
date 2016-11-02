@@ -1,3 +1,8 @@
+/*
+ * This file contains the implementation of the tour class.
+ * See tour.h for comments about each member.
+ */
+
 #include <iostream>
 #include "Tour.h"
 #include "Node.h"

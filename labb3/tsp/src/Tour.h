@@ -6,18 +6,17 @@
 
 class Tour {
 public:
-
-    Tour();
-    ~Tour();
-    void show();
-    void draw(QGraphicsScene* scene);
-    int size();
-    double distance();
-    void insertNearest(Point p);
-    void insertSmallest(Point p);
+    Tour(); //Creates a new Tour object.
+    ~Tour(); //Destructor for tour object.
+    void show(); //Displays the tour in standard output.
+    void draw(QGraphicsScene* scene); //Draws the tour on display.
+    int size(); //Calculates the number of nodes in the tour.
+    double distance();  //Calculates the total distance of the tour.
+    void insertNearest(Point p); //Heuristic. Puts new node to the closest node in the tour.
+    void insertSmallest(Point p); //Heuristic. Puts the node where impact on distance is at a minimum.
 
 private:
-    void deleteTour(Node *curr, Node *head);
+    void deleteTour(Node *curr, Node *head); //Deletes all nodes of the tour.
     Node *head;
 
 };
