@@ -12,7 +12,11 @@
 class Robot : public Unit {
 public:
     Robot();
+    Robot(const Robot& r);
+
     void draw(QGraphicsScene* scene) const;
+
+    virtual bool isJunk();
 };
 
 #endif // ROBOT_H

@@ -7,9 +7,15 @@
 #include "constants.h"
 
 Robot::Robot() : Unit() {}
+Robot::Robot(const Robot& r) : Unit(r) {}
+
 
 void Robot::draw(QGraphicsScene *scene) const {
     Point corner = asPoint();
     scene->addEllipse(QRectF(corner.x * UNIT_WIDTH, corner.y * UNIT_HEIGHT,
                              JUNK_RADIUS, JUNK_RADIUS), QPen(), QBrush(ROBOT_COLOR));
+}
+
+bool Robot::isJunk() {
+    return false;
 }

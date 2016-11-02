@@ -30,12 +30,17 @@ public:
     /*
     * Can I catch u in one move?
     */
-    bool attacks(const Unit& u) const;
+    virtual bool attacks(const Unit& u) const;
 
     /*
     * Take one step closer to u
     */
-    void moveTowards(const Unit& u);
+    virtual void moveTowards(const Unit& u);
+
+    /*
+    * Draw unit on display
+    */
+    virtual void draw();
 
     /*
     * Teleport. Does not check for collision

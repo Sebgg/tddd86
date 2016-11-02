@@ -6,11 +6,23 @@
 #include "Junk.h"
 #include "constants.h"
 
-Junk::Junk() : Unit() {}
-Junk::Junk(Unit c) : Unit(c) {}
+Junk::Junk() : Robot() {}
+Junk::Junk(Robot r) : Robot(r) {}
 
 void Junk::draw(QGraphicsScene *scene) const {
     Point corner = asPoint();
     scene->addEllipse(QRectF(corner.x * UNIT_WIDTH, corner.y * UNIT_HEIGHT,
                              JUNK_RADIUS, JUNK_RADIUS), QPen(), QBrush(JUNK_COLOR));
+}
+
+void Junk::moveTowards(const Robot& r){
+
+}
+
+bool Junk::attacks(const Robot& t) const {
+    return false;
+}
+
+bool Junk::isJunk() {
+    return true;
 }
