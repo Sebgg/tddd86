@@ -51,6 +51,7 @@ public:
     * Euclidean distance to u
     */
     double distanceTo(const Unit& u) const;
+
 private:
     int x;  // x position of this unit
     int y;  // y position of this unit

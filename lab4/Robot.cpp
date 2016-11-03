@@ -19,3 +19,7 @@ void Robot::draw(QGraphicsScene *scene) const {
 bool Robot::isJunk() {
     return false;
 }
+
+void Robot::moveTowards(const Unit& u){
+    Unit::moveTowards(u);
+}

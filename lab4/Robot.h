@@ -14,9 +14,11 @@ public:
     Robot();
     Robot(const Robot& r);
 
-    void draw(QGraphicsScene* scene) const;
+    virtual void draw(QGraphicsScene* scene) const;
 
     virtual bool isJunk();
+
+    virtual void moveTowards(const Unit& u);
 };
 
 #endif // ROBOT_H

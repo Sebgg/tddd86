@@ -5,6 +5,7 @@
 
 #include "Junk.h"
 #include "constants.h"
+#include <iostream>
 
 Junk::Junk() : Robot() {}
 Junk::Junk(Robot r) : Robot(r) {}
@@ -16,7 +17,7 @@ void Junk::draw(QGraphicsScene *scene) const {
 }
 
 void Junk::moveTowards(const Robot& r){
-
+    std::cout << "Moving junk" << std::endl;
 }
 
 bool Junk::attacks(const Robot& t) const {

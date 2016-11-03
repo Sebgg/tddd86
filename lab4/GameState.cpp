@@ -24,10 +24,8 @@ GameState::GameState(int numberOfRobots) {
 
 void GameState::draw(QGraphicsScene *scene) const {
     scene->clear();
-    for (size_t i = 0; i < robots.size(); ++i)
+    for (size_t i = 0; i < robots.size(); i++)
         robots[i]->draw(scene);
-    //for (size_t i = 0; i < junks.size(); ++i)
-    //    junks[i].draw(scene);
     hero.draw(scene);
 }
 
@@ -38,7 +36,7 @@ void GameState::teleportHero() {
 }
 
 void GameState::moveRobots() {
-    for (unsigned int i = 0; i < robots.size(); i++)
+    for (size_t i = 0; i < robots.size(); i++)
         robots[i]->moveTowards(hero);
 }
 
@@ -50,13 +48,17 @@ int GameState::countCollisions() {
         if (collision) {
             for( size_t i = 0; i < robots.size(); i++){
                 if(robots[i]->at(*robots[x])){
-                    robots[i] = (new Junk(*robots[i]));
+                    Junk *j = new Junk(*robots[i]);
+                    robots[i] = j;
                     numberDestroyed++;
                 }
             }
 
         }
         x++;
+    }
+    for(size_t i = 0; i < robots.size(); i++){
+        cout << robots[i]->isJunk() << endl;
     }
     cout << numberDestroyed << "ebola" << endl;
     return numberDestroyed;
