@@ -19,7 +19,7 @@ public:
     */
     void draw(QGraphicsScene* scene) const;
 
-    void moveTowards(const Robot& r);
+    void moveTowards(const Unit& u);
 
     bool attacks(const Robot& t) const;
 

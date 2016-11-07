@@ -18,7 +18,6 @@ public:
 
     virtual bool isJunk();
 
-    virtual void moveTowards(const Unit& u);
 };
 
 #endif // ROBOT_H

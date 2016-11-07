@@ -6,7 +6,8 @@
 #include "GameState.h"
 #include "utilities.h"
 #include "constants.h"
-#include<iostream>
+#include <iostream>
+#include <memory>
 
 using namespace std;
 
@@ -14,12 +15,13 @@ GameState::GameState(){}
 
 GameState::GameState(int numberOfRobots) {
     for (int i = 0; i < numberOfRobots; i++) {
-        Robot *robot = new Robot();
-        robots.push_back(robot);
-        cout << "aids" << endl;
+        Robot *r = new Robot();
+        while(!isEmpty(*r)){
+            r->teleport();
+        }
+        robots.push_back(r);
     }
     teleportHero();
-    cout << "cancer" << endl;
 }
 
 void GameState::draw(QGraphicsScene *scene) const {
@@ -37,7 +39,9 @@ void GameState::teleportHero() {
 
 void GameState::moveRobots() {
     for (size_t i = 0; i < robots.size(); i++)
-        robots[i]->moveTowards(hero);
+        //if(!robots[i]->isJunk()) {
+            robots[i]->moveTowards(hero);
+
 }
 
 int GameState::countCollisions() {
@@ -46,26 +50,33 @@ int GameState::countCollisions() {
     while (x < robots.size()) {
         bool collision = (countRobotsAt(*robots[x]) > 1);
         if (collision) {
-            for( size_t i = 0; i < robots.size(); i++){
-                if(robots[i]->at(*robots[x])){
-                    Junk *j = new Junk(*robots[i]);
-                    robots[i] = j;
-                    numberDestroyed++;
-                }
-            }
-
+            numberDestroyed += makeJunk(x);
         }
         x++;
     }
+    return numberDestroyed;
+}
+
+int GameState::makeJunk(const int& x){
+    int numberDestroyed = 0;
     for(size_t i = 0; i < robots.size(); i++){
-        cout << robots[i]->isJunk() << endl;
+        if(robots[i]->at(*robots[x]) && !robots[i]->isJunk()){
+            Junk *j = new Junk(*robots[i]);
+            delete robots[i];
+            robots[i] = j;
+            numberDestroyed++;
+        }
     }
-    cout << numberDestroyed << "ebola" << endl;
     return numberDestroyed;
 }
 
 bool GameState::anyRobotsLeft() const {
-    return (robots.size() != 0);
+    for(size_t i = 0; i < robots.size(); i++){
+        if(!robots[i]->isJunk()){
+            return true;
+        }
+    }
+    return false;
 }
 
 bool GameState::heroDead() const {
@@ -74,7 +85,7 @@ bool GameState::heroDead() const {
 
 bool GameState::isSafe(const Unit& unit) const {
     for (unsigned int i = 0; i < robots.size(); i++)
-        if (robots[i]->attacks(unit) || (robots[i]->at(unit) && robots[i]->isJunk())) return false;
+        if (robots[i]->attacks(unit) || (robots[i]->at(unit) && !robots[i]->isJunk())) return false;
     return true;
 }
 
@@ -88,14 +99,13 @@ Hero GameState::getHero() const {return hero;}
  * Free of robots and junk only
  */
 bool GameState::isEmpty(const Unit& unit) const {
-    bool empty = countRobotsAt(unit) == 0;
     for(size_t i = 0; i < robots.size(); i++){
-        if(robots[i]->at(unit) && robots[i]->isJunk()){
+        if(robots[i]->at(unit) && !robots[i]->isJunk()){
             cout << "Poop" << endl;
             return false;
         }
     }
-    return true && empty;
+    return true;
 }
 
 /*
@@ -104,7 +114,7 @@ bool GameState::isEmpty(const Unit& unit) const {
 int GameState::countRobotsAt(const Unit& unit) const {
     int count = 0;
     for (size_t i = 0; i < robots.size(); ++i) {
-        if (robots[i]->at(unit) && !robots[i]->isJunk()){
+        if (robots[i]->at(unit)){
             count++;
         }
     }

@@ -11,6 +11,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include <QGraphicsScene>
 #include "Unit.h"
 #include "Robot.h"
@@ -59,7 +60,7 @@ public:
     bool isSafe (const Unit& unit) const; // Can unit safely reside here?
 
     /*
-     * Move hero towards dir
+     * Move hero towards dirthis->tileList
      */
     void moveHeroTowards (const Unit& dir);
 
@@ -70,13 +71,12 @@ public:
 
 private:
     std::vector<Robot*> robots;  // the robots
-    //std::vector<Junk> junks;    // robots that have turned to junk
     Hero hero;                  // the hero
 
     // private helpers
     bool isEmpty(const Unit& unit) const;
-    //bool junkAt(const Unit& unit) const;
     int countRobotsAt(const Unit& unit) const;
+    int makeJunk(const int& i);
 
 };
 

@@ -8,6 +8,7 @@
 #include "utilities.h"
 #include <cstdlib>
 #include <cmath>
+#include<iostream>
 
 Unit::Unit() {
     teleport();

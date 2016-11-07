@@ -16,8 +16,8 @@ void Junk::draw(QGraphicsScene *scene) const {
                              JUNK_RADIUS, JUNK_RADIUS), QPen(), QBrush(JUNK_COLOR));
 }
 
-void Junk::moveTowards(const Robot& r){
-    std::cout << "Moving junk" << std::endl;
+void Junk::moveTowards(const Unit& u){
+
 }
 
 bool Junk::attacks(const Robot& t) const {

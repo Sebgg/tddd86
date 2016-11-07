@@ -9,6 +9,8 @@
 #include "Hero.h"
 #include "Robot.h"
 #include "Junk.h"
+#include <iostream>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent) {
