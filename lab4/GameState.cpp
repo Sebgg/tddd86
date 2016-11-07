@@ -24,6 +24,18 @@ GameState::GameState(int numberOfRobots) {
     teleportHero();
 }
 
+GameState::GameState(GameState& other){
+    this->robots = other.robots;
+    this->hero = other.hero;
+}
+
+GameState::~GameState(){
+    delete[] this->robots;
+    delete this->hero;
+}
+
+GameState GameState::operator=(const GameState gameState){}
+
 void GameState::draw(QGraphicsScene *scene) const {
     scene->clear();
     for (size_t i = 0; i < robots.size(); i++)
@@ -39,8 +51,7 @@ void GameState::teleportHero() {
 
 void GameState::moveRobots() {
     for (size_t i = 0; i < robots.size(); i++)
-        //if(!robots[i]->isJunk()) {
-            robots[i]->moveTowards(hero);
+        robots[i]->moveTowards(hero);
 
 }
 

@@ -22,6 +22,9 @@ class GameState {
 public:
     GameState();
     GameState(int numberOfRobots);
+    GameState(GameState& gameState);
+    ~GameState();
+    GameState &operator=(const GameState& gameState);
 
     /*
      * Clear and redraw entire playing field
@@ -68,6 +71,7 @@ public:
      * Return hero
      */
     Hero getHero () const;
+
 
 private:
     std::vector<Robot*> robots;  // the robots
