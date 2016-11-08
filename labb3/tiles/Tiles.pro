@@ -8,8 +8,8 @@ SOURCES += mainwindow.cpp \
     Tile.cpp \
     TileList.cpp
 QMAKE_CXXFLAGS += -std=c++11
-QMAKE_CXXFLAGS += -stdlib=libc++
-QMAKE_LFLAGS += -stdlib=libc++
+#QMAKE_CXXFLAGS += -stdlib=libc++
+#QMAKE_LFLAGS += -stdlib=libc++
 macx {
     cache()
 }
