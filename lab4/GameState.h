@@ -25,13 +25,13 @@ public:
     GameState(int numberOfRobots);
 
     // Copy constructor
-    GameState(GameState& gameState);
+    GameState(const GameState &gameState);
 
     // Destructor
     ~GameState();
 
     // Gamestate operator= overload
-    GameState &operator=(const GameState& gameState);
+    GameState &operator=(const GameState &gameState);
 
     /*
      * Clear and redraw entire playing field
@@ -70,7 +70,7 @@ public:
     bool isSafe (const Unit& unit) const; // Can unit safely reside here?
 
     /*
-     * Move hero towards dirthis->tileList
+     * Move hero towards
      */
     void moveHeroTowards (const Unit& dir);
 

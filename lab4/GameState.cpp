@@ -24,32 +24,34 @@ GameState::GameState(int numberOfRobots) {
     teleportHero();
 }
 
-GameState::GameState(GameState& other){
-    this->robots = other.robots;
-    this->hero = other.hero;
+GameState::GameState(const GameState &other){
+    vector<Robot*> r = other.robots;
+    robots = r;
+    Hero h = other.getHero();
+    hero = h;
 }
 
-GameState::~GameState(){
-    delete[] this->robots;
-    delete this->hero;
-}
+GameState::~GameState() {}
 
-GameState& GameState::operator=(const GameState &gameState){
-    for(Robot robot : robots){
-        delete robot;
+GameState& GameState::operator=(const GameState &other){
+    for(size_t i = 0; i < robots.size(); i++){
+        delete robots[i];
     }
-    delete hero;
-    for(size_t i = 0; i < gameState.robots.size(); i++){
-        robots[i] = gameState.robots[i];
+
+    for(size_t i = 0; i < other.robots.size(); i++){
+        Robot *r = new Robot(*other.robots[i]);
+        robots[i] = r;
     }
-    hero = gameState.getHero();
+    Hero h = other.getHero();
+    hero = h;
     return *this;
 }
 
 void GameState::draw(QGraphicsScene *scene) const {
     scene->clear();
-    for (size_t i = 0; i < robots.size(); i++)
+    for (size_t i = 0; i < robots.size(); i++){
         robots[i]->draw(scene);
+    }
     hero.draw(scene);
 }
 
@@ -122,7 +124,6 @@ Hero GameState::getHero() const {return hero;}
 bool GameState::isEmpty(const Unit& unit) const {
     for(size_t i = 0; i < robots.size(); i++){
         if(robots[i]->at(unit) && !robots[i]->isJunk()){
-            cout << "Poop" << endl;
             return false;
         }
     }

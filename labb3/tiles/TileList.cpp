@@ -46,7 +46,6 @@ void TileList::raise(const int x, const int y)
         for(int i = index+1; i <= size; i++){
             tileList[i-1] = tileList[i];
         }
-        checkResize(); //Added check for size.
         tileList[size-1] = found;
     }
 }
@@ -85,7 +84,6 @@ void TileList::removeAll(const int x, const int y)
 void TileList::checkResize()
 {
     if(size == capacity){
-        cout << "fugg" << endl;
         Tile* bigger = new Tile[capacity*2];
         for(int i = 0; i < size; i++){
             bigger[i] = tileList[i];
