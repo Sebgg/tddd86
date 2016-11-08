@@ -34,7 +34,17 @@ GameState::~GameState(){
     delete this->hero;
 }
 
-GameState GameState::operator=(const GameState gameState){}
+GameState& GameState::operator=(const GameState &gameState){
+    for(Robot robot : robots){
+        delete robot;
+    }
+    delete hero;
+    for(size_t i = 0; i < gameState.robots.size(); i++){
+        robots[i] = gameState.robots[i];
+    }
+    hero = gameState.getHero();
+    return *this;
+}
 
 void GameState::draw(QGraphicsScene *scene) const {
     scene->clear();
