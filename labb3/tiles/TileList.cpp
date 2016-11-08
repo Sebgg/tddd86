@@ -5,14 +5,11 @@
 #include "TileList.h"
 using namespace std;
 
-TileList::TileList()
-{
-    tileList = new Tile[capacity];
-}
+TileList::TileList() {}
 
 TileList::~TileList()
 {
-    delete[] this->tileList;
+    delete[] tileList;
 }
 
 void TileList::addTile(const Tile tile)
@@ -24,7 +21,7 @@ void TileList::addTile(const Tile tile)
 
 void TileList::drawAll(QGraphicsScene* scene)
 {
-    for(unsigned int i = 0; i <= size; i++) {
+    for(int i = 0; i <= size; i++) {
         Tile tile = tileList[i];
         tile.draw(scene);
     }
@@ -46,9 +43,10 @@ void TileList::raise(const int x, const int y)
     int index = indexOfTopTile(x, y);
     if(index != -1){
         Tile found = tileList[index];
-        for(unsigned int i = index+1; i <= size; i++){
+        for(int i = index+1; i <= size; i++){
             tileList[i-1] = tileList[i];
         }
+        checkResize(); //Added check for size.
         tileList[size] = found;
     }
 }
@@ -69,17 +67,18 @@ void TileList::remove(const int x, const int y)
 {
     int index = indexOfTopTile(x, y);
     if(index != -1 && index != size){
-        for(unsigned int i = index+1; i <= size; i++){
+        for(int i = index+1; i <= size; i++){
             tileList[i-1] = tileList[i];
         }
+         size--; //moved size within if brackets
     }
-    size--;
+
 }
 
 void TileList::removeAll(const int x, const int y)
 {
     while(indexOfTopTile(x, y) != -1){
-        this->remove(x, y);
+        remove(x, y);
     }
 }
 
