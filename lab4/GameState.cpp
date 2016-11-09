@@ -31,24 +31,20 @@ GameState::GameState(const GameState &other){
     hero = h;
 }
 
-GameState::~GameState() {
-    for(size_t i = 0; i < robots.size(); i++){
-        delete robots[i];
-    }
-}
+GameState::~GameState() {}
 
 GameState GameState::operator =(const int& numberOfRobots){
     for(size_t i = 0; i < robots.size(); i++){
         delete robots[i];
     }
 
-    GameState other = new GameState(numberOfRobots);
+    GameState *other = new GameState(numberOfRobots);
 
-    for(size_t i = 0; i < other.robots.size(); i++){
-        Robot *r = new Robot(*other.robots[i]);
+    for(size_t i = 0; i < other->robots.size(); i++){
+        Robot *r = new Robot(*other->robots[i]);
         robots[i] = r;
     }
-    Hero h = other.getHero();
+    Hero h = other->getHero();
     hero = h;
 
     delete other;

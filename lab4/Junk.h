@@ -13,7 +13,6 @@ class Junk : public Robot {
 public:
     Junk();
     Junk(Robot r);
-    ~Junk();
 
     /*
     * Draws this junk onto the given QGraphicsScene.

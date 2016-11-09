@@ -9,7 +9,6 @@
 
 Junk::Junk() : Robot() {}
 Junk::Junk(Robot r) : Robot(r) {}
-Junk::~Junk(){delete this;}
 
 void Junk::draw(QGraphicsScene *scene) const {
     Point corner = asPoint();

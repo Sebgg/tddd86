@@ -31,7 +31,7 @@ public:
     ~GameState();
 
     // Gamestate operator= overload
-    GameState operator =(const GameState &gameState);
+    GameState operator =(const int& numberOfRobots);
 
     /*
      * Clear and redraw entire playing field
