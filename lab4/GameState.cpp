@@ -31,12 +31,18 @@ GameState::GameState(const GameState &other){
     hero = h;
 }
 
-GameState::~GameState() {}
-
-GameState& GameState::operator=(const GameState &other){
+GameState::~GameState() {
     for(size_t i = 0; i < robots.size(); i++){
         delete robots[i];
     }
+}
+
+GameState GameState::operator =(const int& numberOfRobots){
+    for(size_t i = 0; i < robots.size(); i++){
+        delete robots[i];
+    }
+
+    GameState other = new GameState(numberOfRobots);
 
     for(size_t i = 0; i < other.robots.size(); i++){
         Robot *r = new Robot(*other.robots[i]);
@@ -44,6 +50,8 @@ GameState& GameState::operator=(const GameState &other){
     }
     Hero h = other.getHero();
     hero = h;
+
+    delete other;
     return *this;
 }
 

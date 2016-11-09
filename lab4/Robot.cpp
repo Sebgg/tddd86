@@ -8,6 +8,7 @@
 
 Robot::Robot() : Unit() {}
 Robot::Robot(const Robot& r) : Unit(r) {}
+Robot::~Robot() {delete this;}
 
 
 void Robot::draw(QGraphicsScene *scene) const {

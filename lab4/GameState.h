@@ -31,7 +31,7 @@ public:
     ~GameState();
 
     // Gamestate operator= overload
-    GameState &operator=(const GameState &gameState);
+    GameState operator =(const GameState &gameState);
 
     /*
      * Clear and redraw entire playing field
@@ -88,6 +88,7 @@ private:
     bool isEmpty(const Unit& unit) const;
     int countRobotsAt(const Unit& unit) const;
     int makeJunk(const int& i);
+    void removeRobots(GameState* gameState);
 
 };
 
