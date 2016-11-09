@@ -16,7 +16,16 @@
  */
 void playOneGame(Boggle& boggle) {
     // TODO: implement this function (and add any other functions you like to help you)
+    string makeCustom;
+    cout << "Do you want to generate a random board? " << endl;
+    cin >> makeCustom;
+    while(!(makeCustom == "Y" || makeCustom == "y" ||
+            makeCustom == "N" || makeCustom == "n")){
+        cout << "Please answer yes or no " << endl;
+        cin >> makeCustom;
+    }
 
+    boggle.makeBoard(makeCustom);
 }
 
 /*

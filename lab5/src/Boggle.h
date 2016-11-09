@@ -9,7 +9,8 @@
 
 #include <iostream>
 #include <string>
-// TODO: include any other header files you need
+#include "grid.h"
+#include "lexicon.h"
 
 using namespace std;
 
@@ -20,8 +21,23 @@ public:
     const int BOARD_SIZE = 4;
 
     // TODO: decide the public member functions and declare them
+    bool isLegit(const string& word);
+
+    bool isInBoard(const string& word);
+
+    bool isInDictionary(const string& word);
+
+    bool isUnique(const string& word);
+
+    void makeBoard(const string& randomize);
 
 private:
+    void setGrid(string& board);
+    void printGrid();
+    bool checkForInvalid(const string& board);
+    vector<string> foundWords;
+    Grid<char> grid;
+    Lexicon english("EnglishWords.dat"); //fix dis shit
     // TODO: decide the private member variables/functions and declare them
 
 };

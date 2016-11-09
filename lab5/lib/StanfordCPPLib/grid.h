@@ -507,7 +507,15 @@ std::string Grid<ValueType>::toString() {
 
 /*
  * Implementation notes: << and >>
- * -------------------------------
+ * -------------------------------void deepCopy(const Grid & grid) {
+        int n = grid.nRows * grid.nCols;
+        elements = new ValueType[n];
+        for (int i = 0; i < n; i++) {
+            elements[i] = grid.elements[i];
+        }
+        nRows = grid.nRows;
+        nCols = grid.nCols;
+    }
  * The insertion and extraction operators use the template facilities in
  * strlib.h to read and write generic values in a way that treats strings
  * specially.
