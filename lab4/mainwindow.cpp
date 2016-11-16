@@ -194,6 +194,7 @@ void MainWindow::resetGame() {
     numberOfRobots = MIN_ROBOTS;
     gameState = GameState(numberOfRobots);
     gameState.draw(scene);
+    std::cout << "adis" << std::endl;
     displayScore();
     displayLevel();
     gameOver = false;

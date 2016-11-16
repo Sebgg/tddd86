@@ -69,7 +69,7 @@ bool Boggle::isLegit(const string& word){
 bool Boggle::isInBoard(const string& word){}
 
 bool Boggle::isInDictionary(const string& word){
-    return (dict.contains(word));
+    return (english.contains(word));
 }
 
 bool Boggle::isUnique(const string& word){
@@ -97,5 +97,3 @@ void Boggle::setGrid(string& board) {
         }
     }
 }
-
-// TODO: implement the members you declared in Boggle.h
