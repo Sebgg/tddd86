@@ -13,20 +13,17 @@ class Junk : public Robot {
 public:
     Junk();
     Junk(Robot r);
-
+    ~Junk() = default;
     /*
     * Draws this junk onto the given QGraphicsScene.
     */
-    void draw(QGraphicsScene* scene) const;
+    void draw(QGraphicsScene* scene) const override;
 
     void moveTowards(const Unit& u);
 
     bool attacks(const Robot& t) const;
 
-    bool isJunk();
-
-private:
-    int x, y;
+    bool isJunk() override;
 };
 
 #endif // JUNK_H

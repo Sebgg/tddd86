@@ -16,6 +16,7 @@ public:
     Unit();
     Unit(const Unit& u);
     Unit(const Point& p);
+    virtual ~Unit() = default;
 
     /*
     * Return Point representation of Unit

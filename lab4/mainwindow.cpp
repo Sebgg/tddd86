@@ -160,6 +160,7 @@ void MainWindow::processMove(bool waiting) {
     if (!gameState.anyRobotsLeft()) { // won level
         numberOfRobots = std::min(MAX_ROBOTS, numberOfRobots + ROBOTS_INC);
         gameState = GameState(numberOfRobots);
+        std::cout<<"cool" <<std::endl;
         gameState.draw(scene);
         ++level;
         displayLevel();

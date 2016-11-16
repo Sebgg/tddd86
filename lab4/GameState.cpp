@@ -21,6 +21,7 @@ GameState::GameState(int numberOfRobots) {
         }
         robots.push_back(r);
     }
+    //What and where are we supposed to delete robots?
     teleportHero();
 }
 
@@ -39,21 +40,19 @@ GameState::~GameState() {
     robots.clear();
 }
 
-GameState GameState::operator =(const int& numberOfRobots){
+GameState GameState::operator =(const GameState &other){
     for(size_t i = 0; i < robots.size(); i++){
         delete robots[i];
     }
+    robots.clear();
 
-    GameState *other = new GameState(numberOfRobots);
-
-    for(size_t i = 0; i < other->robots.size(); i++){
-        Robot *r = new Robot(*other->robots[i]);
-        robots[i] = r;
+    for(size_t i = 0; i < other.robots.size(); i++){
+        Robot *r = new Robot(*other.robots[i]);
+        robots.push_back(r);
     }
-    Hero h = other->getHero();
+    Hero h = other.getHero();
     hero = h;
 
-    delete other;
     return *this;
 }
 
