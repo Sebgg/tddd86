@@ -34,6 +34,7 @@ public:
 private:
     void setGrid(string& board);
     void printGrid();
+    string printFoundWords();
     bool checkForInvalid(const string& board);
     vector<string> foundWords;
     Grid<char> grid;

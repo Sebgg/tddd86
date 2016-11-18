@@ -32,9 +32,15 @@ void playOneGame(Boggle& boggle) {
     cin >> guessedWord;
 
     if(!boggle.isInDictionary(guessedWord) || !boggle.isLegit(guessedWord) || !boggle.isUnique(guessedWord)){
-        cout << "coolt" << endl;
+      //Magical shit happens here.
     }
-    cout << "you did it" << endl;
+    cout << "You found a new word! " << guessedWord << endl;
+}
+
+void displayPlayerstats(const Boggle& boggle){
+    cout << "Your words " << "(" << boggle.foundWords.size() << "): "
+    << boggle.printFoundWords() << endl;
+
 }
 
 /*

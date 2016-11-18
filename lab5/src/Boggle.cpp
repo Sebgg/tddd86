@@ -98,3 +98,15 @@ void Boggle::setGrid(string& board) {
         }
     }
 }
+
+string printFoundWords(){
+    string Words = "{";
+    for(auto word : foundWords){
+        Words += word;
+        if(word != foundWords.back()){
+            Words += ", ";
+        }
+    }
+    Words += "}";
+    return Words;
+}
