@@ -46,10 +46,11 @@ void playOneGame(Boggle& boggle) {
             cout << "Invalid input" << endl;
         }
 
-        if(boggle.getFoundWords().size() > 1){
+        if(boggle.getFoundWords().size() > 3){
             playing = false;
         }
     }
+    boggle.resetGame();
 }
 
 void displayPlayerstats(Boggle& boggle){

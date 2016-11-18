@@ -37,6 +37,8 @@ public:
 
     void addWord(const string& word);
 
+    void resetGame();
+
 private:
     void setGrid(vector<Cube*>& cubes);
     void printGrid();

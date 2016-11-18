@@ -105,6 +105,7 @@ void Boggle::setGrid(vector<Cube*>& cubes) {
             cubeMap[counter] = *cubes.back();
             grid.set(i, j, counter);
             cubes.pop_back();
+            counter--;
         }
     }
 }
@@ -127,4 +128,9 @@ vector<string> Boggle::getFoundWords(){
 
 void Boggle::addWord(const string& word){
     foundWords.push_back(word);
+}
+
+void Boggle::resetGame() {
+    foundWords.clear();
+    cubeMap.clear();
 }

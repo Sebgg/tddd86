@@ -7,12 +7,10 @@ CONFIG += no_include_pwd
 # Do not create an app bundle when running on OS X
 #CONFIG -= app_bundle
 
-SOURCES = $$PWD/src/*.cpp \
-    src/Cube.cpp
+SOURCES = $$PWD/src/*.cpp
 SOURCES += $$PWD/lib/StanfordCPPLib/*.cpp
 
-HEADERS = $$PWD/src/*.h \
-    src/Cube.h
+HEADERS = $$PWD/src/*.h
 HEADERS += $$PWD/lib/StanfordCPPLib/*.h
 
 # GCC defaults to not warning about failing to return from a non-void function

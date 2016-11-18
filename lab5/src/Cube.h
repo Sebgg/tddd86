@@ -1,5 +1,5 @@
-#ifndef _cube_h
-#define _cube_h
+#ifndef CUBE_H
+#define CUBE_H
 
 #include <string>
 
