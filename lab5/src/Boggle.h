@@ -11,7 +11,7 @@
 #include <string>
 #include "grid.h"
 #include "lexicon.h"
-
+#include "Cube.h"
 using namespace std;
 
 class Boggle {
@@ -31,16 +31,20 @@ public:
 
     void makeBoard(const string& randomize);
 
-private:
-    void setGrid(string& board);
-    void printGrid();
     string printFoundWords();
+
+    vector<string> getFoundWords();
+
+    void addWord(const string& word);
+
+private:
+    void setGrid(vector<Cube*>& cubes);
+    void printGrid();
     bool checkForInvalid(const string& board);
     vector<string> foundWords;
-    Grid<char> grid;
-    Lexicon english; //fix dis shit
-    // TODO: decide the private member variables/functions and declare them
-
+    map<int, Cube> cubeMap;
+    Grid<int> grid;
+    Lexicon english;
 };
 
 #endif

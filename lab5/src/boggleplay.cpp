@@ -15,9 +15,12 @@ using namespace std;
 /*
  * Plays one game of Boggle using the given boggle game state object.
  */
+void displayPlayerstats(Boggle &boggle);
+
 void playOneGame(Boggle& boggle) {
     // TODO: implement this function (and add any other functions you like to help you)
     string makeCustom;
+    bool playing;
     cout << "Do you want to generate a random board? " << endl;
     cin >> makeCustom;
     while(!(makeCustom == "Y" || makeCustom == "y" ||
@@ -25,20 +28,32 @@ void playOneGame(Boggle& boggle) {
         cout << "Please answer yes or no " << endl;
         cin >> makeCustom;
     }
-
+    playing = true;
     boggle.makeBoard(makeCustom);
-    string guessedWord;
-    cout << "Type a word (or press Enter to end your turn)" << endl;
-    cin >> guessedWord;
+    while(playing){
+        displayPlayerstats(boggle);
+        string guessedWord;
+        cout << "Type a word (or press Enter to end your turn)" << endl;
+        cin >> guessedWord;
 
-    if(!boggle.isInDictionary(guessedWord) || !boggle.isLegit(guessedWord) || !boggle.isUnique(guessedWord)){
-      //Magical shit happens here.
+        if(boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)){
+            //Magical shit happens here.
+            boggle.addWord(guessedWord);
+            cout << "You found a new word! " << guessedWord << endl;
+        } else if(guessedWord.size() == 0){
+            //wow, robots turn!
+        } else {
+            cout << "Invalid input" << endl;
+        }
+
+        if(boggle.getFoundWords().size() > 1){
+            playing = false;
+        }
     }
-    cout << "You found a new word! " << guessedWord << endl;
 }
 
-void displayPlayerstats(const Boggle& boggle){
-    cout << "Your words " << "(" << boggle.foundWords.size() << "): "
+void displayPlayerstats(Boggle& boggle){
+    cout << "Your words " << "(" << boggle.getFoundWords().size() << "): "
     << boggle.printFoundWords() << endl;
 
 }

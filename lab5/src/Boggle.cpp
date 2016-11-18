@@ -14,6 +14,7 @@
 #include <algorithm>
 #include "lexicon.h"
 #include <cctype>
+#include "Cube.h"
 
 using namespace std;
 
@@ -31,14 +32,17 @@ void Boggle::makeBoard(const string& randomize){
     string board = "";
     english.addWordsFromFile("EnglishWords.dat");
     grid.resize(BOARD_SIZE, BOARD_SIZE);
+    vector<Cube*> cubes;
     if(randomize == "Y" || randomize == "y"){
         for(const auto& s : CUBES){
-            int rand = randomInteger(0, 5);
-            board += s[rand];
+            Cube *c = new Cube(s);
+            c->setRandom();
+            cubes.push_back(c);
         }
-        setGrid(board);
+        setGrid(cubes);
         shuffle(grid);
     } else {
+        //Ska ändras så att den implementerar cube klassen
         cout << "Write the 16 letters you want to use" << endl;
         cin >> board;
         bool onlyLetters = checkForInvalid(board);
@@ -46,7 +50,11 @@ void Boggle::makeBoard(const string& randomize){
             cout << "Invalid input, should be 16 letters" << endl;
             cin >> board;
         }
-        setGrid(board);
+        for(const auto& s : board){
+            Cube *c = new Cube(s);
+            cubes.push_back(c);
+        }
+        setGrid(cubes);
 
     }
 
@@ -77,31 +85,33 @@ bool Boggle::isUnique(const string& word){
     for(const auto &s : foundWords){
         if(word == s) return false;
     }
-    foundWords.push_back(word);
     return true;
 }
 
 void Boggle::printGrid() {
     for(int i = 0; i < BOARD_SIZE; i++){
         for(int j = 0; j < BOARD_SIZE; j++){
-            cout << grid.get(i, j);
+            int pos = grid.get(i, j);
+            cout << cubeMap.at(pos).getTop();
         }
         cout << endl;
     }
 }
 
-void Boggle::setGrid(string& board) {
+void Boggle::setGrid(vector<Cube*>& cubes) {
+    int counter = 15;
     for(int i = BOARD_SIZE-1; i >= 0; i--){
         for(int j = BOARD_SIZE-1; j >= 0; j--){
-            grid.set(i, j, board.back());
-            board.pop_back();
+            cubeMap[counter] = *cubes.back();
+            grid.set(i, j, counter);
+            cubes.pop_back();
         }
     }
 }
 
-string printFoundWords(){
+string Boggle::printFoundWords(){
     string Words = "{";
-    for(auto word : foundWords){
+    for(const auto word : foundWords){
         Words += word;
         if(word != foundWords.back()){
             Words += ", ";
@@ -109,4 +119,12 @@ string printFoundWords(){
     }
     Words += "}";
     return Words;
+}
+
+vector<string> Boggle::getFoundWords(){
+    return foundWords;
+}
+
+void Boggle::addWord(const string& word){
+    foundWords.push_back(word);
 }

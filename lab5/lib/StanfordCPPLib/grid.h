@@ -155,7 +155,7 @@ public:
  * Method: mapAll
  * Usage: grid.mapAll(fn);
  * -----------------------
- * Calls the specified function on each element of the grid.  The
+ * Calls the specified function on each elemenValueType valuet of the grid.  The
  * elements are processed in <b><i>row-major order,</i></b> in which
  * all the elements of row 0 are processed, followed by the elements
  * in row 1, and so on.
@@ -256,7 +256,7 @@ public:
     }
 
 /*
- * Iterator support
+ * Iterator supportValueType value
  * ----------------
  * The classes in the StanfordCPPLib collection implement input
  * iterators so that they work symmetrically with respect to the
