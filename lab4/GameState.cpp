@@ -21,7 +21,6 @@ GameState::GameState(int numberOfRobots) {
         }
         robots.push_back(r);
     }
-    //What and where are we supposed to delete robots?
     teleportHero();
 }
 

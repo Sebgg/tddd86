@@ -37,7 +37,7 @@ private:
     bool checkForInvalid(const string& board);
     vector<string> foundWords;
     Grid<char> grid;
-    Lexicon english("EnglishWords.dat"); //fix dis shit
+    Lexicon english; //fix dis shit
     // TODO: decide the private member variables/functions and declare them
 
 };

@@ -29,6 +29,7 @@ static string CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every
 
 void Boggle::makeBoard(const string& randomize){
     string board = "";
+    english.addWordsFromFile("EnglishWords.dat");
     grid.resize(BOARD_SIZE, BOARD_SIZE);
     if(randomize == "Y" || randomize == "y"){
         for(const auto& s : CUBES){
@@ -73,7 +74,7 @@ bool Boggle::isInDictionary(const string& word){
 }
 
 bool Boggle::isUnique(const string& word){
-    for(const string& s : foundWords){
+    for(const auto &s : foundWords){
         if(word == s) return false;
     }
     foundWords.push_back(word);

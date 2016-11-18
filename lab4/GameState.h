@@ -20,17 +20,25 @@
 
 class GameState {
 public:
-    // Constructors
+    /*
+     * Constructor
+     */
     GameState();
     GameState(int numberOfRobots);
 
-    // Copy constructor
+    /*
+     * Copy constructor
+     */
     GameState(const GameState &gameState);
 
-    // Destructor
+    /*
+     * Destructor
+     */
     ~GameState();
 
-    // Gamestate operator= overload
+    /*
+     * operator '=' overload
+     */
     GameState operator =(const GameState& other);
 
     /*

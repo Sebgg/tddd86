@@ -14,7 +14,13 @@ public:
     Robot();
     Robot(const Robot& r);
     virtual ~Robot() = default;
+    /*
+     * Draws Robot in game window.
+     */
     virtual void draw(QGraphicsScene* scene) const;
+    /*
+     * Tells the game that robot is not junk.
+     */
     virtual bool isJunk();
 
 };

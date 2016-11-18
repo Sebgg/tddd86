@@ -11,6 +11,7 @@
 #include "strlib.h"
 // TODO: include any other header files you need
 
+using namespace std;
 /*
  * Plays one game of Boggle using the given boggle game state object.
  */
@@ -26,6 +27,14 @@ void playOneGame(Boggle& boggle) {
     }
 
     boggle.makeBoard(makeCustom);
+    string guessedWord;
+    cout << "Type a word (or press Enter to end your turn)" << endl;
+    cin >> guessedWord;
+
+    if(!boggle.isInDictionary(guessedWord) || !boggle.isLegit(guessedWord) || !boggle.isUnique(guessedWord)){
+        cout << "coolt" << endl;
+    }
+    cout << "you did it" << endl;
 }
 
 /*
