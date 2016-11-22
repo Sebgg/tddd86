@@ -39,6 +39,8 @@ public:
 
     void resetGame();
 
+    bool searchBoard(const string& word);
+
 private:
     void setGrid(vector<Cube*>& cubes);
     void printGrid();

@@ -62,6 +62,12 @@ void Boggle::makeBoard(const string& randomize){
     printGrid();
 }
 
+bool Boggle::searchBoard(const string &word){
+    //Main function for the algorithm
+    cout << grid.toString() << endl;
+    return false;
+}
+
 bool Boggle::checkForInvalid(const string& board){
     for(const auto& c : board){
         if(ALPHABET.find_first_of(c) == string::npos){

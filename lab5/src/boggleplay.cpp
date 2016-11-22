@@ -30,25 +30,26 @@ void playOneGame(Boggle& boggle) {
     }
     playing = true;
     boggle.makeBoard(makeCustom);
+    bool valu = boggle.searchBoard("hello");
+
     while(playing){
         displayPlayerstats(boggle);
         string guessedWord;
         cout << "Type a word (or press Enter to end your turn)" << endl;
         cin >> guessedWord;
 
-        if(boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)){
+        if(guessedWord.size() == 0){
+            //wow, robots turn!
+        } else if(boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)){
             //Magical shit happens here.
             boggle.addWord(guessedWord);
             cout << "You found a new word! " << guessedWord << endl;
-        } else if(guessedWord.size() == 0){
-            //wow, robots turn!
+        } else if(boggle.getFoundWords().size() > 3){
+            playing = false;
         } else {
             cout << "Invalid input" << endl;
         }
 
-        if(boggle.getFoundWords().size() > 3){
-            playing = false;
-        }
     }
     boggle.resetGame();
 }
