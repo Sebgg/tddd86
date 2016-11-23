@@ -96,7 +96,8 @@ private:
     bool isEmpty(const Unit& unit) const;
     int countRobotsAt(const Unit& unit) const;
     int makeJunk(const int& i);
-    void removeRobots(GameState* gameState);
+    void removeRobots();
+    void copyGameState(const GameState &gameState);
 
 };
 

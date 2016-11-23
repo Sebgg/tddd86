@@ -49,6 +49,7 @@ private:
     map<int, Cube> cubeMap;
     Grid<int> grid;
     Lexicon english;
+    bool searchWord(string word, int charPos, bool &found);
 };
 
 #endif

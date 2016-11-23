@@ -63,9 +63,40 @@ void Boggle::makeBoard(const string& randomize){
 }
 
 bool Boggle::searchBoard(const string &word){
-    //Main function for the algorithm
-    cout << grid.toString() << endl;
-    return false;
+    //Main function for the player search algorithm
+    vector<int> charPos;
+
+    for(size_t nRow = 0; nRow < BOARD_SIZE-1; nRow++){ //Foreach instead?
+        for(size_t nCol = 0; nCol < BOARD_SIZE-1; nCol++){
+            if(cubeMap[grid.get(nRow, nCol)].getTopSide() == word.front()){
+                charPos.push_back(grid.get(nRow, nCol));
+            }
+        }
+    }
+    bool found = false;
+    for(const auto& pos : charPos){
+        searchWord(word, charPos, found);
+    }
+
+    return found;
+}
+
+void Boggle::searchWord(string word, int charPos, bool &found){
+    if(true) {
+        found = true;
+    } else {
+        for(size_t nRow = 0; nRow < BOARD_SIZE-1; nRow++){ //Foreach instead?
+            for(size_t nCol = 0; nCol < BOARD_SIZE-1; nCol++){
+                Cube temp = cubeMap[grid.get(nRow, nCol)];
+                if(temp.getTopSide() == word.front() && !temp.isVisited()){
+                    temp.setVisited();
+                    string tempWord = word[1:];
+                    searchWord()
+                }
+            }
+        }
+    }
+
 }
 
 bool Boggle::checkForInvalid(const string& board){
