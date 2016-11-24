@@ -30,7 +30,7 @@ void playOneGame(Boggle& boggle) {
     }
     playing = true;
     boggle.makeBoard(makeCustom);
-    bool valu = boggle.searchBoard("hello");
+
 
     while(playing){
         displayPlayerstats(boggle);
@@ -38,12 +38,22 @@ void playOneGame(Boggle& boggle) {
         cout << "Type a word (or press Enter to end your turn)" << endl;
         cin >> guessedWord;
 
+        for(int i=0;guessedWord[i]!=0;i++){
+            if(guessedWord[i]<=122 && guessedWord[i]>=97){
+                guessedWord[i] -= 32;
+            }
+        }
+        // Convert string to uppercase via ascii table. Very fast. Much Optimization.
+
         if(guessedWord.size() == 0){
             //wow, robots turn!
-        } else if(boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)){
-            //Magical shit happens here.
-            boggle.addWord(guessedWord);
-            cout << "You found a new word! " << guessedWord << endl;
+        } else if(/*boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)*/true){
+            if(boggle.searchBoard(guessedWord)){
+                boggle.addWord(guessedWord);
+                cout << "You found a new word! " << guessedWord << endl;
+            } else {
+                cout << "Word not on the board :-(" << endl;
+            }
         } else if(boggle.getFoundWords().size() > 3){
             playing = false;
         } else {

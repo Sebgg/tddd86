@@ -39,7 +39,7 @@ public:
 
     void resetGame();
 
-    bool searchBoard(const string& word);
+    bool searchBoard( string& word);
 
 private:
     void setGrid(vector<Cube*>& cubes);
@@ -49,7 +49,7 @@ private:
     map<int, Cube> cubeMap;
     Grid<int> grid;
     Lexicon english;
-    bool searchWord(string word, int charPos, bool &found);
+    void searchWord(string word, size_t nRow, size_t nCol, bool &found);
 };
 
 #endif

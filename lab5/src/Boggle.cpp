@@ -42,7 +42,6 @@ void Boggle::makeBoard(const string& randomize){
         setGrid(cubes);
         shuffle(grid);
     } else {
-        //Ska ändras så att den implementerar cube klassen
         cout << "Write the 16 letters you want to use" << endl;
         cin >> board;
         bool onlyLetters = checkForInvalid(board);
@@ -62,36 +61,45 @@ void Boggle::makeBoard(const string& randomize){
     printGrid();
 }
 
-bool Boggle::searchBoard(const string &word){
+bool Boggle::searchBoard( string& word){
     //Main function for the player search algorithm
-    vector<int> charPos;
-
-    for(size_t nRow = 0; nRow < BOARD_SIZE-1; nRow++){ //Foreach instead?
-        for(size_t nCol = 0; nCol < BOARD_SIZE-1; nCol++){
-            if(cubeMap[grid.get(nRow, nCol)].getTopSide() == word.front()){
-                charPos.push_back(grid.get(nRow, nCol));
+    bool found = false;
+    for(size_t nRow = 0; nRow < BOARD_SIZE; nRow++){
+        for(size_t nCol = 0; nCol < BOARD_SIZE; nCol++){
+            cout << nRow << nCol << endl;
+            if(cubeMap[grid.get(nRow, nCol)].getTop() == word.front()){
+                cout << "we made it" << endl;
+                string tempWord = word;
+                tempWord.erase(tempWord.begin());
+                cubeMap[grid.get(nRow, nCol)].setVisited();
+                searchWord(tempWord, nRow, nCol, found);
+                cubeMap[grid.get(nRow, nCol)].setVisited();
             }
         }
     }
-    bool found = false;
-    for(const auto& pos : charPos){
-        searchWord(word, charPos, found);
-    }
-
     return found;
 }
 
-void Boggle::searchWord(string word, int charPos, bool &found){
-    if(true) {
+void Boggle::searchWord(string word, size_t nRow, size_t nCol, bool &found){
+    cout << word << endl;
+    if(word.size() == 0) {
+        cout << "WHY" << endl;
         found = true;
     } else {
-        for(size_t nRow = 0; nRow < BOARD_SIZE-1; nRow++){ //Foreach instead?
-            for(size_t nCol = 0; nCol < BOARD_SIZE-1; nCol++){
-                Cube temp = cubeMap[grid.get(nRow, nCol)];
-                if(temp.getTopSide() == word.front() && !temp.isVisited()){
-                    temp.setVisited();
-                    string tempWord = word[1:];
-                    searchWord()
+        for(int row = nRow-1; row < nRow+2; row++){
+            for(int col = nCol-1; col < nCol+2; col++){
+                cout << "love boggle" << endl;
+                if(grid.inBounds(row, col) && (row != nRow || col != nCol)){
+                    cout<< word.front() << row << col << endl;
+                    Cube neighbour = cubeMap[grid.get(row, col)];
+                    if(neighbour.getTop() == word.front() && !neighbour.isVisited()){
+                        cout << "wow, this is the neighbour!!!!!1: " << neighbour.getTop() << endl;
+                        neighbour.setVisited(); // Mark cube as visited
+                        string tempWord = word;
+                        tempWord.erase(tempWord.begin()); // word with out first char
+                        searchWord(tempWord, row, col, found);
+                        neighbour.setVisited(); // Unmark cube
+                    }
                 }
             }
         }
