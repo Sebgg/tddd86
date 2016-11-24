@@ -47,7 +47,7 @@ void playOneGame(Boggle& boggle) {
 
         if(guessedWord.size() == 0){
             //wow, robots turn!
-        } else if(/*boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)*/true){
+        } else if(boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)){
             if(boggle.searchBoard(guessedWord)){
                 boggle.addWord(guessedWord);
                 cout << "You found a new word! " << guessedWord << endl;

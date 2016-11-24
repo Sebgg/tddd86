@@ -61,14 +61,12 @@ void Boggle::makeBoard(const string& randomize){
     printGrid();
 }
 
-bool Boggle::searchBoard( string& word){
+bool Boggle::searchBoard(string& word){
     //Main function for the player search algorithm
     bool found = false;
     for(size_t nRow = 0; nRow < BOARD_SIZE; nRow++){
         for(size_t nCol = 0; nCol < BOARD_SIZE; nCol++){
-            cout << nRow << nCol << endl;
             if(cubeMap[grid.get(nRow, nCol)].getTop() == word.front()){
-                cout << "we made it" << endl;
                 string tempWord = word;
                 tempWord.erase(tempWord.begin());
                 cubeMap[grid.get(nRow, nCol)].setVisited();
@@ -80,20 +78,15 @@ bool Boggle::searchBoard( string& word){
     return found;
 }
 
-void Boggle::searchWord(string word, size_t nRow, size_t nCol, bool &found){
-    cout << word << endl;
+void Boggle::searchWord(string word, int nRow, int nCol, bool &found){
     if(word.size() == 0) {
-        cout << "WHY" << endl;
         found = true;
     } else {
         for(int row = nRow-1; row < nRow+2; row++){
             for(int col = nCol-1; col < nCol+2; col++){
-                cout << "love boggle" << endl;
                 if(grid.inBounds(row, col) && (row != nRow || col != nCol)){
-                    cout<< word.front() << row << col << endl;
                     Cube neighbour = cubeMap[grid.get(row, col)];
                     if(neighbour.getTop() == word.front() && !neighbour.isVisited()){
-                        cout << "wow, this is the neighbour!!!!!1: " << neighbour.getTop() << endl;
                         neighbour.setVisited(); // Mark cube as visited
                         string tempWord = word;
                         tempWord.erase(tempWord.begin()); // word with out first char
@@ -104,7 +97,6 @@ void Boggle::searchWord(string word, size_t nRow, size_t nCol, bool &found){
             }
         }
     }
-
 }
 
 bool Boggle::checkForInvalid(const string& board){
@@ -120,7 +112,32 @@ bool Boggle::isLegit(const string& word){
     return word.size() >= MIN_WORD_LENGTH;
 }
 
-bool Boggle::isInBoard(const string& word){}
+void Boggle::findAll(){
+    for(size_t row = 0; row < BOARD_SIZE; row++){
+        for(size_t col = 0; col < BOARD_SIZE; col++){
+            string word = "a";
+            while(!word.empty()){
+                word = autoSearch(row, col, "");
+                robotWords.push_back(word);
+            }
+        }
+    }
+}
+
+string Boggle::autoSearch(int nRow, int nCol, string word){
+    if(isInDictionary(word) && isLegit(word) && isUnique(word) && isRUnique(word)) {
+        return word;
+    } else {
+        for(int row = nRow-1; row < nRow+2; row++){
+            for(int col = nCol-1; col < nCol+2; col++){
+                if(grid.inBounds(row, col) && (row != nRow || col != nCol)){
+                    Cube neighbour = cubeMap[grid.get(row, col)];
+
+                }
+            }
+        }
+    }
+}
 
 bool Boggle::isInDictionary(const string& word){
     return (english.contains(word));
@@ -133,9 +150,16 @@ bool Boggle::isUnique(const string& word){
     return true;
 }
 
+bool Boggle::isRUnique(const string &word){
+    for(const auto &s : robotWords){
+        if(word == s) return false;
+    }
+    return true;
+}
+
 void Boggle::printGrid() {
-    for(int i = 0; i < BOARD_SIZE; i++){
-        for(int j = 0; j < BOARD_SIZE; j++){
+    for(size_t i = 0; i < BOARD_SIZE; i++){
+        for(size_t j = 0; j < BOARD_SIZE; j++){
             int pos = grid.get(i, j);
             cout << cubeMap.at(pos).getTop();
         }
