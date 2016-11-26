@@ -32,6 +32,20 @@ void playOneGame(Boggle& boggle) {
     }
     playing = true;
     boggle.makeBoard(makeCustom);
+    /*
+    if(makeCustom == "Y"){
+        bool cont = true;
+        while(cont){
+            string searchWord;
+            cout << "Searchword: " << endl;
+            cin >> searchWord;
+            string ans;
+            cout << boggle.english.containsPrefix(searchWord) << " or " << boggle.english.contains(searchWord);
+            cin >> ans;
+
+            if(ans == "exit") cont = false;
+        }
+    }*/
 
 
     while(playing){
@@ -50,12 +64,16 @@ void playOneGame(Boggle& boggle) {
 
 
         if(boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)){
+            cout << "It's my turn!" << endl;
+            boggle.findAll();
+            displayRobotResult(boggle);
+            break;/*
             if(boggle.searchBoard(guessedWord)){
                 boggle.addWord(guessedWord);
                 cout << "You found a new word! " << guessedWord << endl;
             } else {
                 cout << "Word not on the board :-(" << endl;
-            }
+            }*/
         } else if(guessedWord.empty()){
             //wow, robots turn!
             cout << "It's my turn!" << endl;
@@ -76,7 +94,7 @@ void displayPlayerstats(Boggle& boggle){
     cout << "Your words " << "(" << score << "): "
     << boggle.printFoundWords() << endl;
 
-    cout << "Your score: " << score << endl;
+    cout << "Your score: " << boggle.getScore('p') << endl;
 
 }
 
@@ -86,7 +104,7 @@ void displayRobotResult(Boggle& boggle){
     cout << "My words " << "(" << score << "): "
     << boggle.printRobotResult() << endl;
 
-    cout << "My score: " << score << endl;
+    cout << "My score: " << boggle.getScore('r') << endl;
 
     cout << "Ha ha ha, I destroyed you. Better luck next time puny human!" << endl;
 }

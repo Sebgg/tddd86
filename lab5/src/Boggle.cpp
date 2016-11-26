@@ -15,6 +15,8 @@
 #include "lexicon.h"
 #include <cctype>
 #include "Cube.h"
+#include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -29,7 +31,15 @@ static string CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every
 };
 
 void Boggle::makeBoard(const string& randomize){
+    /*foundWords.push_back("FOIL");
+    foundWords.push_back("FORM");
+    foundWords.push_back("ROOF"); for testing before we can switch between player and robot, see lab5 for more context
+    foundWords.push_back("ROOM");
+    foundWords.push_back("ROOMY");*/
+
     string board = "";
+    playerScore = 0;
+    robotScore = 0;
     english.addWordsFromFile("EnglishWords.dat");
     grid.resize(BOARD_SIZE, BOARD_SIZE);
     vector<Cube*> cubes;
@@ -118,34 +128,52 @@ bool Boggle::isLegit(const string& word){
 
 void Boggle::findAll(){
     for(size_t row = 0; row < BOARD_SIZE; row++){
-        for(size_t col = 0; col < BOARD_SIZE; col++){
-            string word = "a";
-            while(word != ""){
-                word = autoSearch(row, col, "");
-                robotWords.push_back(word);
+        for(size_t col = 0; col < BOARD_SIZE; col++) {
+            while(true){
+                stringstream ss;
+                string input;
+                string word;
+                cubeMap[grid.get(row, col)].setVisited();
+                char topSide = cubeMap[grid.get(row, col)].getTop();
+                ss << topSide;
+                ss >> input;
+                word = autoSearch(row, col, input);
+                if(word == "") {
+                    break;
+                } else {
+                    robotWords.push_back(word);
+                }
+                cubeMap[grid.get(row, col)].setVisited();
             }
+            cout << "here we are" << endl;
         }
     }
 }
 
 string Boggle::autoSearch(int nRow, int nCol, string word){
+    cout << word << endl;
     if(isInDictionary(word) && isLegit(word) && isUnique(word) && isRUnique(word)) {
+        cout << "ye boi" << endl;
         return word;
-    } else {
+    } else if(english.containsPrefix(word)) {
         for(int row = nRow-1; row < nRow+2; row++){
             for(int col = nCol-1; col < nCol+2; col++){
                 if(grid.inBounds(row, col) && (row != nRow || col != nCol)){
-                    Cube neighbour = cubeMap[grid.get(row, col)];
-                    if(english.containsPrefix(word + neighbour.getTop()) && !neighbour.isVisited()){
-                        neighbour.setVisited();
-                        word += neighbour.getTop();
-                        word += autoSearch(row, col, word);
-                        neighbour.setVisited();
+                    cout << "alone" << endl;
+                    if(!cubeMap[grid.get(row, col)].isVisited()){
+                        cubeMap[grid.get(row, col)].setVisited();
+                        //cout << cubeMap[grid.get(row, col)].getTop() << " aids" << endl;
+                        word += cubeMap[grid.get(row, col)].getTop();
+                        word = autoSearch(row, col, word);
+                        cubeMap[grid.get(row, col)].setVisited();
+                        return word;
                     }
                 }
             }
         }
-        return word;
+    } else {
+        cout << "naw dawg" << endl;
+        return "";
     }
 }
 
@@ -223,9 +251,30 @@ vector<string> Boggle::getRobotWords(){
 
 void Boggle::addWord(const string& word){
     foundWords.push_back(word);
+    addScore(word, 'p');
+}
+
+void Boggle::addScore(const string &word, const char& unit){
+    int score = word.size() - 3;
+    if(unit == 'p'){
+        playerScore += score;
+    } else {
+        robotScore += score;
+    }
+}
+
+int Boggle::getScore(const char &unit){
+    if(unit == 'p'){
+        return playerScore;
+    } else {
+        return robotScore;
+    }
 }
 
 void Boggle::resetGame() {
     foundWords.clear();
     cubeMap.clear();
+    robotWords.clear();
+    playerScore = 0;
+    robotScore = 0;
 }

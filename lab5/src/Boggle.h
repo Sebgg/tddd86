@@ -49,6 +49,11 @@ public:
 
     string printRobotResult();
 
+    int getScore(const char& unit);
+
+    Lexicon english; //Temporarily public for testing reasons
+
+
 private:
     void setGrid(vector<Cube*>& cubes);
     void printGrid();
@@ -57,8 +62,11 @@ private:
     vector<string> robotWords;
     map<int, Cube> cubeMap;
     Grid<int> grid;
-    Lexicon english;
+
+    int playerScore;
+    int robotScore;
     void searchWord(string word, int nRow, int nCol, bool &found);
+    void addScore(const string& word, const char& unit);
 };
 
 #endif
