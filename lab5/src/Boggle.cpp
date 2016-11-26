@@ -44,17 +44,21 @@ void Boggle::makeBoard(const string& randomize){
     } else {
         cout << "Write the 16 letters you want to use" << endl;
         cin >> board;
-        bool onlyLetters = checkForInvalid(board);
-        while(board.size() != NUM_CUBES || !onlyLetters){
+        while(board.size() != NUM_CUBES || !checkForInvalid(board)){
             cout << "Invalid input, should be 16 letters" << endl;
             cin >> board;
         }
+        for(int i=0;board[i]!=0;i++){
+            if(board[i]<=122 && board[i]>=97){
+                board[i] -= 32;
+            }
+        }
+        // Convert string to uppercase via ascii table. Very fast. Much Optimization.
         for(const auto& s : board){
             Cube *c = new Cube(s);
             cubes.push_back(c);
         }
         setGrid(cubes);
-
     }
 
     cout << "It's your turn!" << endl;
@@ -109,14 +113,14 @@ bool Boggle::checkForInvalid(const string& board){
 }
 
 bool Boggle::isLegit(const string& word){
-    return word.size() >= MIN_WORD_LENGTH;
+    return word.size() >= MIN_WORD_LENGTH && word.size() > 0;
 }
 
 void Boggle::findAll(){
     for(size_t row = 0; row < BOARD_SIZE; row++){
         for(size_t col = 0; col < BOARD_SIZE; col++){
             string word = "a";
-            while(!word.empty()){
+            while(word != ""){
                 word = autoSearch(row, col, "");
                 robotWords.push_back(word);
             }
@@ -132,10 +136,16 @@ string Boggle::autoSearch(int nRow, int nCol, string word){
             for(int col = nCol-1; col < nCol+2; col++){
                 if(grid.inBounds(row, col) && (row != nRow || col != nCol)){
                     Cube neighbour = cubeMap[grid.get(row, col)];
-
+                    if(english.containsPrefix(word + neighbour.getTop()) && !neighbour.isVisited()){
+                        neighbour.setVisited();
+                        word += neighbour.getTop();
+                        word += autoSearch(row, col, word);
+                        neighbour.setVisited();
+                    }
                 }
             }
         }
+        return word;
     }
 }
 
@@ -191,8 +201,24 @@ string Boggle::printFoundWords(){
     return Words;
 }
 
+string Boggle::printRobotResult(){
+    string Words = "{";
+    for(const auto word : robotWords){
+        Words += word;
+        if(word != robotWords.back()){
+            Words += ", ";
+        }
+    }
+    Words += "}";
+    return Words;
+}
+
 vector<string> Boggle::getFoundWords(){
     return foundWords;
+}
+
+vector<string> Boggle::getRobotWords(){
+    return robotWords;
 }
 
 void Boggle::addWord(const string& word){

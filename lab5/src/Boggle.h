@@ -39,11 +39,15 @@ public:
 
     vector<string> getFoundWords();
 
+    vector<string> getRobotWords();
+
     void addWord(const string& word);
 
     void resetGame();
 
     bool searchBoard( string& word);
+
+    string printRobotResult();
 
 private:
     void setGrid(vector<Cube*>& cubes);

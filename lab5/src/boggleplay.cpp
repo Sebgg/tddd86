@@ -17,6 +17,8 @@ using namespace std;
  */
 void displayPlayerstats(Boggle &boggle);
 
+void displayRobotResult(Boggle &boggle);
+
 void playOneGame(Boggle& boggle) {
     // TODO: implement this function (and add any other functions you like to help you)
     string makeCustom;
@@ -45,16 +47,20 @@ void playOneGame(Boggle& boggle) {
         }
         // Convert string to uppercase via ascii table. Very fast. Much Optimization.
 
-        if(guessedWord.size() == 0){
-            //wow, robots turn!
-        } else if(boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)){
+
+
+        if(boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)){
             if(boggle.searchBoard(guessedWord)){
                 boggle.addWord(guessedWord);
                 cout << "You found a new word! " << guessedWord << endl;
             } else {
                 cout << "Word not on the board :-(" << endl;
             }
-        } else if(boggle.getFoundWords().size() > 3){
+        } else if(guessedWord.empty()){
+            //wow, robots turn!
+            cout << "It's my turn!" << endl;
+            boggle.findAll();
+            displayRobotResult(boggle);
             playing = false;
         } else {
             cout << "Invalid input" << endl;
@@ -65,9 +71,24 @@ void playOneGame(Boggle& boggle) {
 }
 
 void displayPlayerstats(Boggle& boggle){
-    cout << "Your words " << "(" << boggle.getFoundWords().size() << "): "
+    int score = boggle.getFoundWords().size(); //Should be changed to a function to get playerscore
+
+    cout << "Your words " << "(" << score << "): "
     << boggle.printFoundWords() << endl;
 
+    cout << "Your score: " << score << endl;
+
+}
+
+void displayRobotResult(Boggle& boggle){
+    int score = boggle.getRobotWords().size(); //same as above
+
+    cout << "My words " << "(" << score << "): "
+    << boggle.printRobotResult() << endl;
+
+    cout << "My score: " << score << endl;
+
+    cout << "Ha ha ha, I destroyed you. Better luck next time puny human!" << endl;
 }
 
 /*

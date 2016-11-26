@@ -3,14 +3,14 @@
 
 Cube::Cube(){}
 
-Cube::Cube(const string& letters) {
-    this->letters = letters;
-    visited = false;
-}
-
 Cube::Cube(const char& letter) {
     letters = "";
     topSide = letter;
+    visited = false;
+}
+
+Cube::Cube(const string& letters) {
+    this->letters = letters;
     visited = false;
 }
 
