@@ -93,7 +93,7 @@ void Boggle::searchWord(string word, int nRow, int nCol, bool &found){
                     if(neighbour.getTop() == word.front() && !neighbour.isVisited()){
                         neighbour.setVisited(); // Mark cube as visited
                         string tempWord = word;
-                        tempWord.erase(tempWord.begin()); // word with out first char
+                        tempWord.erase(tempWord.begin()); // word without first char
                         searchWord(tempWord, row, col, found);
                         neighbour.setVisited(); // Unmark cube
                     }
