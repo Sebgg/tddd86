@@ -1,6 +1,7 @@
-// You will edit and turn in this CPP file.
-// Also remove these comments here and add your own.
-// TODO: remove this comment header and replace with your own
+// this source file contains the game itself.
+// Main function playOneGame starts a new game
+// and keeps it running as long as the player keeps
+// on guessing. 
 
 #include <cstdlib>
 #include <iostream>
@@ -20,6 +21,7 @@ void playerRound(Boggle &boggle);
 void displayRobotResult(Boggle &boggle);
 void robotRound(Boggle &boggle);
 bool checkUserInput(const string &userWord, Boggle &boggle);
+void makeAllCaps(string& userWord);
 
 void playOneGame(Boggle& boggle) {
     string makeCustom;
@@ -30,8 +32,8 @@ void playOneGame(Boggle& boggle) {
         cout << "Please answer yes or no " << endl;
         getline(cin, makeCustom);
     }
-    boggle.makeBoard(makeCustom);
 
+    boggle.makeBoard(makeCustom);
 
     playerRound(boggle);
     robotRound(boggle);
@@ -54,7 +56,8 @@ void playOneGame(Boggle& boggle) {
 }
 
 void displayPlayerstats(Boggle& boggle){
-    int score = boggle.getFoundWords().size(); //Should be changed to a function to get playerscore
+    int score = boggle.getScore('p'); //Should be changed to a function to get playerscore
+    // EDIT is this even needed anymore?
 
     cout << "Your words " << "(" << score << "): "
     << boggle.printFoundWords() << endl;
@@ -70,32 +73,27 @@ void playerRound(Boggle& boggle) {
         cout << "Type a word (or press Enter to end your turn): ";
         getline(cin, guessedWord);
 
-        for(int i=0; guessedWord[i] != 0; i++){
-            if(guessedWord[i]<=122 && guessedWord[i]>=97){
-                guessedWord[i] -= 32;
-            }
-        }
+        makeAllCaps(guessedWord);
+        cout << guessedWord << endl; // Test makeAllCaps on linux
 
         if(guessedWord.empty()){
             cout << "Shit, I did a fuck" << endl;
             playing = false;
-        } else{
-            if(checkUserInput(guessedWord, boggle)){
-                if(boggle.searchBoard(guessedWord)){
-                    boggle.addWord(guessedWord);
-                    cout << "You've found a new word!" << endl;
-                } else {
-                    cout << "That's not a word!" << endl;
+        }else {
+            if(checkUserInput(guessedWord, boggle) && boggle.searchBoard(guessedWord)){
+                boggle.addWord(guessedWord);
+                cout << "You've found a new word! " << guessedWord << endl;
+            }else {
+                cout << "That's not a word!" << endl;
                 }
-            }
-        }
+        }   
         displayPlayerstats(boggle);
     }
 }
 
 void displayRobotResult(Boggle& boggle){
-    int score = boggle.getRobotWords().size(); //same as above
-
+    int score = boggle.getScore('r'); //same as above
+    // EDIT is this even needed anymore?
     cout << "My words " << "(" << score << "): "
     << boggle.printRobotResult() << endl;
 
@@ -113,16 +111,24 @@ void robotRound(Boggle& boggle){
 
 bool checkUserInput(const string& userWord, Boggle& boggle){
     if(!boggle.isInDictionary(userWord)){
-        cout << "Word could not be found in dictionary" << endl;
+        cout << userWord << " could not be found in dictionary" << endl;
         return false;
     } else if (!boggle.isLegit(userWord)) {
-        cout << "Word is too short! try with something 4 or more chars" << endl;
+        cout << userWord << " is too short! try with something 4 or more chars" << endl;
         return false;
     } else if (!boggle.isUnique(userWord)) {
-        cout << "Looks like you've used that one!" << endl;
+        cout << "Looks like you've used " << userWord << " already!" << endl;
         return false;
     }
     return true;
+}
+
+void makeAllCaps(string& userWord){
+     for(int i=0; userWord[i] != 0; i++){
+        if(userWord[i]<=122 && userWord[i]>=97){
+            userWord[i] -= 32;
+        }
+    }
 }
 
 
