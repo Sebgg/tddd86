@@ -9,29 +9,34 @@
 #include "Boggle.h"
 #include "bogglemain.h"
 #include "strlib.h"
-// TODO: include any other header files you need
-
 using namespace std;
 /*
  * Plays one game of Boggle using the given boggle game state object.
  */
-void displayPlayerstats(Boggle &boggle);
 
+// function declarations
+void displayPlayerstats(Boggle &boggle);
+void playerRound(Boggle &boggle);
 void displayRobotResult(Boggle &boggle);
+void robotRound(Boggle &boggle);
+bool checkUserInput(const string &userWord, Boggle &boggle);
 
 void playOneGame(Boggle& boggle) {
-    // TODO: implement this function (and add any other functions you like to help you)
     string makeCustom;
-    bool playing;
-    cout << "Do you want to generate a random board? " << endl;
-    cin >> makeCustom;
+    cout << "Do you want to randomly generate a board? ";
+    getline(cin, makeCustom);
     while(!(makeCustom == "Y" || makeCustom == "y" ||
             makeCustom == "N" || makeCustom == "n")){
         cout << "Please answer yes or no " << endl;
-        cin >> makeCustom;
+        getline(cin, makeCustom);
     }
-    playing = true;
     boggle.makeBoard(makeCustom);
+
+
+    playerRound(boggle);
+    robotRound(boggle);
+    boggle.resetGame();
+
     /*
     if(makeCustom == "Y"){
         bool cont = true;
@@ -46,46 +51,6 @@ void playOneGame(Boggle& boggle) {
             if(ans == "exit") cont = false;
         }
     }*/
-
-
-    while(playing){
-        displayPlayerstats(boggle);
-        string guessedWord;
-        cout << "Type a word (or press Enter to end your turn)" << endl;
-        cin >> guessedWord;
-
-        for(int i=0;guessedWord[i]!=0;i++){
-            if(guessedWord[i]<=122 && guessedWord[i]>=97){
-                guessedWord[i] -= 32;
-            }
-        }
-        // Convert string to uppercase via ascii table. Very fast. Much Optimization.
-
-
-
-        if(boggle.isInDictionary(guessedWord) && boggle.isLegit(guessedWord) && boggle.isUnique(guessedWord)){
-            cout << "It's my turn!" << endl;
-            boggle.findAll();
-            displayRobotResult(boggle);
-            break;/*
-            if(boggle.searchBoard(guessedWord)){
-                boggle.addWord(guessedWord);
-                cout << "You found a new word! " << guessedWord << endl;
-            } else {
-                cout << "Word not on the board :-(" << endl;
-            }*/
-        } else if(guessedWord.empty()){
-            //wow, robots turn!
-            cout << "It's my turn!" << endl;
-            boggle.findAll();
-            displayRobotResult(boggle);
-            playing = false;
-        } else {
-            cout << "Invalid input" << endl;
-        }
-
-    }
-    boggle.resetGame();
 }
 
 void displayPlayerstats(Boggle& boggle){
@@ -98,6 +63,36 @@ void displayPlayerstats(Boggle& boggle){
 
 }
 
+void playerRound(Boggle& boggle) {
+    string guessedWord;
+    bool playing = true;
+    while (playing){
+        cout << "Type a word (or press Enter to end your turn): ";
+        getline(cin, guessedWord);
+
+        for(int i=0; guessedWord[i] != 0; i++){
+            if(guessedWord[i]<=122 && guessedWord[i]>=97){
+                guessedWord[i] -= 32;
+            }
+        }
+
+        if(guessedWord.empty()){
+            cout << "Shit, I did a fuck" << endl;
+            playing = false;
+        } else{
+            if(checkUserInput(guessedWord, boggle)){
+                if(boggle.searchBoard(guessedWord)){
+                    boggle.addWord(guessedWord);
+                    cout << "You've found a new word!" << endl;
+                } else {
+                    cout << "That's not a word!" << endl;
+                }
+            }
+        }
+        displayPlayerstats(boggle);
+    }
+}
+
 void displayRobotResult(Boggle& boggle){
     int score = boggle.getRobotWords().size(); //same as above
 
@@ -108,6 +103,28 @@ void displayRobotResult(Boggle& boggle){
 
     cout << "Ha ha ha, I destroyed you. Better luck next time puny human!" << endl;
 }
+
+void robotRound(Boggle& boggle){
+        cout << "It's my turn!" << endl;
+        boggle.findAll();
+        displayRobotResult(boggle);
+}
+
+
+bool checkUserInput(const string& userWord, Boggle& boggle){
+    if(!boggle.isInDictionary(userWord)){
+        cout << "Word could not be found in dictionary" << endl;
+        return false;
+    } else if (!boggle.isLegit(userWord)) {
+        cout << "Word is too short! try with something 4 or more chars" << endl;
+        return false;
+    } else if (!boggle.isUnique(userWord)) {
+        cout << "Looks like you've used that one!" << endl;
+        return false;
+    }
+    return true;
+}
+
 
 /*
  * Erases all currently visible text from the output console.
