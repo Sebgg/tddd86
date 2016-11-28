@@ -15,8 +15,6 @@
 #include "lexicon.h"
 #include <cctype>
 #include "Cube.h"
-#include <sstream>
-#include <string>
 
 using namespace std;
 
