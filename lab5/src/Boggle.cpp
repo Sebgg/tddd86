@@ -121,7 +121,8 @@ bool Boggle::isLegit(const string& word){
 void Boggle::findAll(){
     for(size_t row = 0; row < BOARD_SIZE; row++){
         for(size_t col = 0; col < BOARD_SIZE; col++) {
-            while(true){
+            //bool looping = true;
+            /*while(looping){*/
                 stringstream ss;
                 string input;
                 string word;
@@ -129,29 +130,21 @@ void Boggle::findAll(){
                 char topSide = cubeMap[grid.get(row, col)].getTop();
                 ss << topSide;
                 ss >> input;
-                word = autoSearch(row, col, input);
+                autoSearch(row, col, input);
                 cout << "wow ethan " << word << " great moves" << endl;
-                if(word == "") {
-                    cout << "were back boys" << endl;
-                    break;
-                } else {
-                    cout << "were not back boys" << endl;
-                    addScore(word, 'r');
-                    robotWords.push_back(word);
-                }
                 cubeMap[grid.get(row, col)].setVisited();
-            }
+            //}
             cout << "here we are" << endl;
         }
     }
 }
 
-string Boggle::autoSearch(int nRow, int nCol, string word){
+void Boggle::autoSearch(int nRow, int nCol, string& word){
     cout << word << endl;
     if(isInDictionary(word) && isLegit(word) && isUnique(word) && isRUnique(word)) {
         cout << "ye boi" << endl;
-        return word;
-    } else if(english.containsPrefix(word)) {
+        robotWords.push_back(word);
+    } else if (english.containsPrefix(word)){
         for(int row = nRow-1; row < nRow+2; row++){
             for(int col = nCol-1; col < nCol+2; col++){
                 if(grid.inBounds(row, col) && (row != nRow || col != nCol)){
@@ -159,16 +152,12 @@ string Boggle::autoSearch(int nRow, int nCol, string word){
                     if(!cubeMap[grid.get(row, col)].isVisited()){
                         cubeMap[grid.get(row, col)].setVisited();
                         word += cubeMap[grid.get(row, col)].getTop();
-                        word = autoSearch(row, col, word);
+                        autoSearch(row, col, word);
                         cubeMap[grid.get(row, col)].setVisited();
-                        return word;
                     }
                 }
             }
         }
-    } else {
-        cout << "naw dawg" << endl;
-        return "";
     }
 }
 
