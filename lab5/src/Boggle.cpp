@@ -130,9 +130,13 @@ void Boggle::findAll(){
                 ss << topSide;
                 ss >> input;
                 word = autoSearch(row, col, input);
+                cout << "wow ethan " << word << " great moves" << endl;
                 if(word == "") {
+                    cout << "were back boys" << endl;
                     break;
                 } else {
+                    cout << "were not back boys" << endl;
+                    addScore(word, 'r');
                     robotWords.push_back(word);
                 }
                 cubeMap[grid.get(row, col)].setVisited();
@@ -154,7 +158,6 @@ string Boggle::autoSearch(int nRow, int nCol, string word){
                     cout << "alone" << endl;
                     if(!cubeMap[grid.get(row, col)].isVisited()){
                         cubeMap[grid.get(row, col)].setVisited();
-                        //cout << cubeMap[grid.get(row, col)].getTop() << " aids" << endl;
                         word += cubeMap[grid.get(row, col)].getTop();
                         word = autoSearch(row, col, word);
                         cubeMap[grid.get(row, col)].setVisited();
