@@ -29,12 +29,6 @@ static string CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every
 };
 
 void Boggle::makeBoard(const string& randomize){
-    /*foundWords.push_back("FOIL");
-    foundWords.push_back("FORM");
-    foundWords.push_back("ROOF"); for testing before we can switch between player and robot, see lab5 for more context
-    foundWords.push_back("ROOM");
-    foundWords.push_back("ROOMY");*/
-
     string board = "";
     playerScore = 0;
     robotScore = 0;
@@ -51,10 +45,10 @@ void Boggle::makeBoard(const string& randomize){
         shuffle(grid);
     } else {
         cout << "Write the 16 letters you want to use" << endl;
-        cin >> board;
+        getline(cin, board);
         while(board.size() != NUM_CUBES || !checkForInvalid(board)){
             cout << "Invalid input, should be 16 letters" << endl;
-            cin >> board;
+            getline(cin, board);
         }
         for(int i=0;board[i]!=0;i++){
             if(board[i]<=122 && board[i]>=97){

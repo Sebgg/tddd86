@@ -39,20 +39,6 @@ void playOneGame(Boggle& boggle) {
     robotRound(boggle);
     boggle.resetGame();
 
-    /*
-    if(makeCustom == "Y"){
-        bool cont = true;
-        while(cont){
-            string searchWord;
-            cout << "Searchword: " << endl;
-            cin >> searchWord;
-            string ans;
-            cout << boggle.english.containsPrefix(searchWord) << " or " << boggle.english.contains(searchWord);
-            cin >> ans;
-
-            if(ans == "exit") cont = false;
-        }
-    }*/
 }
 
 void displayPlayerstats(Boggle& boggle){
@@ -74,7 +60,7 @@ void playerRound(Boggle& boggle) {
         getline(cin, guessedWord);
 
         makeAllCaps(guessedWord);
-        cout << guessedWord << endl; // Test makeAllCaps on linux
+        cout << guessedWord << endl; // makeAllCaps works on linux
 
         if(guessedWord.empty()){
             cout << "Shit, I did a fuck" << endl;
