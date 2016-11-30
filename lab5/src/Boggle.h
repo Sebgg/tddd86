@@ -1,8 +1,3 @@
-// This is the .h file you will edit and turn in.
-// We have provided a minimal skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own, as well as on the members.
-// TODO: remove this comment header and replace it with your own
 
 #ifndef _boggle_h
 #define _boggle_h
@@ -20,12 +15,15 @@ public:
     const size_t MIN_WORD_LENGTH = 4;
     const size_t BOARD_SIZE = 4;
 
-    // TODO: decide the public member functions and declare them
+    /*
+     * Checks if the word is at least 4 characters long
+     */
     bool isLegit(const string& word);
 
+    /*
+     * The
+     */
     void autoSearch();
-
-    void autoSearchHelp(int nRow, int nCol, string word);
 
     bool isInDictionary(const string& word);
 
@@ -67,6 +65,7 @@ private:
     int robotScore;
     void searchWord(string word, int nRow, int nCol, bool &found);
     void addScore(const string& word, const char& unit);
+    void autoSearchHelp(int nRow, int nCol, string word);
 };
 
 #endif
