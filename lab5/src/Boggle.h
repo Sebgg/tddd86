@@ -23,9 +23,9 @@ public:
     // TODO: decide the public member functions and declare them
     bool isLegit(const string& word);
 
-    void findAll();
+    void autoSearch();
 
-    void autoSearch(int nRow, int nCol, string& word);
+    void autoSearchHelp(int nRow, int nCol, string word);
 
     bool isInDictionary(const string& word);
 

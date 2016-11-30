@@ -105,6 +105,39 @@ void Boggle::searchWord(string word, int nRow, int nCol, bool &found){
     }
 }
 
+void Boggle::autoSearch(){
+    for(size_t nRow = 0; nRow < BOARD_SIZE; nRow++){
+        for(size_t nCol = 0; nCol < BOARD_SIZE; nCol++){
+            string s(1, cubeMap[grid.get(nRow, nCol)].getTop());
+            cubeMap[grid.get(nRow, nCol)].setVisited();
+            autoSearchHelp(nRow, nCol, s);
+            cubeMap[grid.get(nRow, nCol)].setVisited();
+        }
+    }
+}
+
+void Boggle::autoSearchHelp(int nRow, int nCol, string word){
+    if(isInDictionary(word) && isLegit(word) && isUnique(word) && isRUnique(word)){
+        addScore(word, 'r');
+        robotWords.push_back(word);
+    } else {
+        for(int row = nRow-1; row < nRow+2; row++){
+            for(int col = nCol-1; col < nCol+2; col++){
+                if(grid.inBounds(row, col) && (row != nRow || col != nCol)){
+                    if(english.containsPrefix(word + cubeMap[grid.get(row, col)].getTop())
+                            && !cubeMap[grid.get(row, col)].isVisited()){
+                        cubeMap[grid.get(row, col)].setVisited(); // Mark cube as visited
+                        string tempWord = word;
+                        tempWord += cubeMap[grid.get(row, col)].getTop();
+                        autoSearchHelp(row, col, tempWord);
+                        cubeMap[grid.get(row, col)].setVisited(); // Unmark cube
+                    }
+                }
+            }
+        }
+    }
+}
+
 bool Boggle::checkForInvalid(const string& board){
     for(const auto& c : board){
         if(ALPHABET.find_first_of(c) == string::npos){
@@ -118,48 +151,6 @@ bool Boggle::isLegit(const string& word){
     return word.size() >= MIN_WORD_LENGTH && word.size() > 0;
 }
 
-void Boggle::findAll(){
-    for(size_t row = 0; row < BOARD_SIZE; row++){
-        for(size_t col = 0; col < BOARD_SIZE; col++) {
-            //bool looping = true;
-            /*while(looping){*/
-                stringstream ss;
-                string input;
-                string word;
-                cubeMap[grid.get(row, col)].setVisited();
-                char topSide = cubeMap[grid.get(row, col)].getTop();
-                ss << topSide;
-                ss >> input;
-                autoSearch(row, col, input);
-                cout << "wow ethan " << word << " great moves" << endl;
-                cubeMap[grid.get(row, col)].setVisited();
-            //}
-            cout << "here we are" << endl;
-        }
-    }
-}
-
-void Boggle::autoSearch(int nRow, int nCol, string& word){
-    cout << word << endl;
-    if(isInDictionary(word) && isLegit(word) && isUnique(word) && isRUnique(word)) {
-        cout << "ye boi" << endl;
-        robotWords.push_back(word);
-    } else if (english.containsPrefix(word)){
-        for(int row = nRow-1; row < nRow+2; row++){
-            for(int col = nCol-1; col < nCol+2; col++){
-                if(grid.inBounds(row, col) && (row != nRow || col != nCol)){
-                    cout << "alone" << endl;
-                    if(!cubeMap[grid.get(row, col)].isVisited()){
-                        cubeMap[grid.get(row, col)].setVisited();
-                        word += cubeMap[grid.get(row, col)].getTop();
-                        autoSearch(row, col, word);
-                        cubeMap[grid.get(row, col)].setVisited();
-                    }
-                }
-            }
-        }
-    }
-}
 
 bool Boggle::isInDictionary(const string& word){
     return (english.contains(word));
@@ -204,7 +195,9 @@ void Boggle::setGrid(vector<Cube*>& cubes) {
 string Boggle::printFoundWords(){
     string Words = "{";
     for(const auto word : foundWords){
+        Words += "\"";
         Words += word;
+        Words += "\"";
         if(word != foundWords.back()){
             Words += ", ";
         }
@@ -216,7 +209,9 @@ string Boggle::printFoundWords(){
 string Boggle::printRobotResult(){
     string Words = "{";
     for(const auto word : robotWords){
+        Words += "\"";
         Words += word;
+        Words += "\"";
         if(word != robotWords.back()){
             Words += ", ";
         }

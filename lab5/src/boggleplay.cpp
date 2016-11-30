@@ -42,10 +42,7 @@ void playOneGame(Boggle& boggle) {
 }
 
 void displayPlayerstats(Boggle& boggle){
-    int score = boggle.getScore('p'); //Should be changed to a function to get playerscore
-    // EDIT is this even needed anymore?
-
-    cout << "Your words " << "(" << score << "): "
+    cout << "Your words " << "(" << boggle.getFoundWords().size() << "): "
     << boggle.printFoundWords() << endl;
 
     cout << "Your score: " << boggle.getScore('p') << endl;
@@ -63,12 +60,11 @@ void playerRound(Boggle& boggle) {
         cout << guessedWord << endl; // makeAllCaps works on linux
 
         if(guessedWord.empty()){
-            cout << "Shit, I did a fuck" << endl;
             playing = false;
         }else {
             if(checkUserInput(guessedWord, boggle) && boggle.searchBoard(guessedWord)){
                 boggle.addWord(guessedWord);
-                cout << "You've found a new word! " << guessedWord << endl;
+                cout << "You've found a new word! " << "\"" << guessedWord << "\"" << endl;
             }else {
                 cout << "That's not a word!" << endl;
                 }
@@ -78,9 +74,7 @@ void playerRound(Boggle& boggle) {
 }
 
 void displayRobotResult(Boggle& boggle){
-    int score = boggle.getScore('r'); //same as above
-    // EDIT is this even needed anymore?
-    cout << "My words " << "(" << score << "): "
+    cout << "My words " << "(" << boggle.getRobotWords().size() << "): "
     << boggle.printRobotResult() << endl;
 
     cout << "My score: " << boggle.getScore('r') << endl;
@@ -90,7 +84,7 @@ void displayRobotResult(Boggle& boggle){
 
 void robotRound(Boggle& boggle){
         cout << "It's my turn!" << endl;
-        boggle.findAll();
+        boggle.autoSearch();
         displayRobotResult(boggle);
 }
 
