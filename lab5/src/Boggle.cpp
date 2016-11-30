@@ -28,8 +28,7 @@ static string CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every
    "EIOSST", "ELRTTY", "HIMNQU", "HLNNRZ"
 };
 
-void Boggle::makeBoard(const string& randomize){
-    string board = "";
+void Boggle::makeBoard(const string& randomize, const string& board){
     playerScore = 0;
     robotScore = 0;
     english.addWordsFromFile("EnglishWords.dat");
@@ -44,18 +43,6 @@ void Boggle::makeBoard(const string& randomize){
         setGrid(cubes);
         shuffle(grid);
     } else {
-        cout << "Write the 16 letters you want to use" << endl;
-        getline(cin, board);
-        while(board.size() != NUM_CUBES || !checkForInvalid(board)){
-            cout << "Invalid input, should be 16 letters" << endl;
-            getline(cin, board);
-        }
-        for(int i=0;board[i]!=0;i++){
-            if(board[i]<=122 && board[i]>=97){
-                board[i] -= 32;
-            }
-        }
-        // Convert string to uppercase via ascii table. Very fast. Much Optimization.
         for(const auto& s : board){
             Cube *c = new Cube(s);
             cubes.push_back(c);
@@ -63,8 +50,6 @@ void Boggle::makeBoard(const string& randomize){
         setGrid(cubes);
     }
 
-    cout << "It's your turn!" << endl;
-    printGrid();
 }
 
 bool Boggle::searchBoard(string& word){
@@ -170,14 +155,16 @@ bool Boggle::isRUnique(const string &word){
     return true;
 }
 
-void Boggle::printGrid() {
+string Boggle::printGrid() {
+    string board;
     for(size_t i = 0; i < BOARD_SIZE; i++){
         for(size_t j = 0; j < BOARD_SIZE; j++){
             int pos = grid.get(i, j);
-            cout << cubeMap.at(pos).getTop();
+            board += cubeMap.at(pos).getTop();
         }
-        cout << endl;
+        board += "\n";
     }
+    return board;
 }
 
 void Boggle::setGrid(vector<Cube*>& cubes) {

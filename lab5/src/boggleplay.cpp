@@ -11,18 +11,42 @@
 #include "bogglemain.h"
 #include "strlib.h"
 using namespace std;
+
+static const int NUM_CUBES = 16;   // the number of cubes in the game
+
+/*
+ * Prints player stats to terminal output
+ */
+void displayPlayerstats(Boggle &boggle);
+
+/*
+ * Let player guess words
+ */
+void playerRound(Boggle &boggle);
+
+/*
+ * Prints computer status to terminal output
+ */
+void displayRobotResult(Boggle &boggle);
+
+/*
+ * Let computer end the game
+ */
+void robotRound(Boggle &boggle);
+
+/*
+ * Make sure that the word meets the criterias
+ */
+bool checkUserInput(const string &userWord, Boggle &boggle);
+
+/*
+ * Transforms a string to upper case by using ascii values
+ */
+void makeAllCaps(string& userWord);
+
 /*
  * Plays one game of Boggle using the given boggle game state object.
  */
-
-// function declarations
-void displayPlayerstats(Boggle &boggle);
-void playerRound(Boggle &boggle);
-void displayRobotResult(Boggle &boggle);
-void robotRound(Boggle &boggle);
-bool checkUserInput(const string &userWord, Boggle &boggle);
-void makeAllCaps(string& userWord);
-
 void playOneGame(Boggle& boggle) {
     string makeCustom;
     cout << "Do you want to randomly generate a board? ";
@@ -33,8 +57,21 @@ void playOneGame(Boggle& boggle) {
         getline(cin, makeCustom);
     }
 
-    boggle.makeBoard(makeCustom);
+    string board = "";
 
+    if(makeCustom == "N" || makeCustom == "n") {
+        cout << "Write the 16 letters you want to use" << endl;
+        getline(cin, board);
+        while(board.size() != NUM_CUBES || !boggle.checkForInvalid(board)){
+            cout << "Invalid input, should be 16 letters" << endl;
+            getline(cin, board);
+        }
+
+        makeAllCaps(board);
+    }
+
+    boggle.makeBoard(makeCustom, board);
+    cout << boggle.printGrid();
     playerRound(boggle);
     robotRound(boggle);
     boggle.resetGame();
@@ -53,6 +90,7 @@ void playerRound(Boggle& boggle) {
     string guessedWord;
     bool playing = true;
     while (playing){
+        displayPlayerstats(boggle);
         cout << "Type a word (or press Enter to end your turn): ";
         getline(cin, guessedWord);
 
@@ -69,7 +107,6 @@ void playerRound(Boggle& boggle) {
                 cout << "That's not a word!" << endl;
                 }
         }   
-        displayPlayerstats(boggle);
     }
 }
 
@@ -79,7 +116,11 @@ void displayRobotResult(Boggle& boggle){
 
     cout << "My score: " << boggle.getScore('r') << endl;
 
-    cout << "Ha ha ha, I destroyed you. Better luck next time puny human!" << endl;
+    if(boggle.getScore('r') > boggle.getScore('p')){
+        cout << "Ha ha ha, I destroyed you. Better luck next time puny human!" << endl;
+    } else {
+        cout << "Fuck you Cage, and fuck you Jables! I will get you tenaciuos d" << endl;
+    }
 }
 
 void robotRound(Boggle& boggle){
@@ -110,6 +151,7 @@ void makeAllCaps(string& userWord){
         }
     }
 }
+
 
 
 /*
