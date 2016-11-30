@@ -105,6 +105,9 @@ void Boggle::autoSearchHelp(int nRow, int nCol, string word){
     if(isInDictionary(word) && isLegit(word) && isUnique(word) && isRUnique(word)){
         addScore(word, 'r');
         robotWords.push_back(word);
+        if(english.containsPrefix(word)){ // Don't stop if there are longer words with word in it e.g. cube n' cubes
+            autoSearchHelp(nRow, nCol, word);
+        }
     } else {
         for(int row = nRow-1; row < nRow+2; row++){
             for(int col = nCol-1; col < nCol+2; col++){
