@@ -4,17 +4,51 @@
 // TODO: remove this comment header
 
 #include "encoding.h"
+#include <vector>
+#include <queue>
 // TODO: include any other headers you need
+using namespace std;
+
+template<typename T> void print_queue(T& q){
+    while(!q.empty()) {
+        cout << *q.top() << endl;
+        q.pop();
+    }
+}
 
 map<int, int> buildFrequencyTable(istream& input) {
-    // TODO: implement this function
+    // Can't handle certain characters yet!
     map<int, int> freqTable;
+
+    char c;
+    while(input.get(c)){
+        freqTable[c] += 1;
+    }
+    freqTable[256] = 1;
+
     return freqTable;
 }
 
 HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
-    // TODO: implement this function
-    return nullptr;
+    auto cmpNodes = [](const HuffmanNode *left, const HuffmanNode *right){return *left < *right; };
+    priority_queue<HuffmanNode, vector<HuffmanNode*>, decltype(cmpNodes)> binTree(cmpNodes);
+    for(auto const c : freqTable){
+        HuffmanNode *T = new HuffmanNode(c.first, c.second);
+        binTree.push(T);
+    }
+
+    while(binTree.size() > 1){
+        HuffmanNode *t1 = binTree.top();
+        binTree.pop();
+        HuffmanNode *t2 = binTree.top();
+        binTree.pop();
+        int freq = t1->count + t2->count;
+        HuffmanNode *T = new HuffmanNode(257, freq, t1, t2);
+        binTree.push(T);
+    }
+
+    HuffmanNode *root = binTree.top();
+    return root;
 }
 
 map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
