@@ -31,7 +31,7 @@ static string CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every
 void Boggle::makeBoard(const string& randomize, const string& board){
     playerScore = 0;
     robotScore = 0;
-    english.addWordsFromFile("EnglishWords.dat");
+    english.addWordsFromFile(DICTIONARY_FILE);
     grid.resize(BOARD_SIZE, BOARD_SIZE);
     vector<Cube*> cubes;
     if(randomize == "Y" || randomize == "y"){
@@ -136,7 +136,7 @@ bool Boggle::checkForInvalid(const string& board){
 }
 
 bool Boggle::isLegit(const string& word){
-    return word.size() >= MIN_WORD_LENGTH && word.size() > 0;
+    return word.size() >= MIN_WORD_LENGTH;
 }
 
 

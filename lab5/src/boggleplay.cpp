@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <chrono>
 #include "Boggle.h"
 #include "bogglemain.h"
 #include "strlib.h"
@@ -37,7 +38,7 @@ void robotRound(Boggle &boggle);
 /*
  * Make sure that the word meets the criterias
  */
-bool checkUserInput(const string &userWord, Boggle &boggle);
+bool checkUserInput(string &userWord, Boggle &boggle);
 
 /*
  * Transforms a string to upper case by using ascii values
@@ -71,7 +72,6 @@ void playOneGame(Boggle& boggle) {
     }
 
     boggle.makeBoard(makeCustom, board);
-    cout << boggle.printGrid();
     playerRound(boggle);
     robotRound(boggle);
     boggle.resetGame();
@@ -90,22 +90,20 @@ void playerRound(Boggle& boggle) {
     string guessedWord;
     bool playing = true;
     while (playing){
+        cout << boggle.printGrid() << endl;
         displayPlayerstats(boggle);
         cout << "Type a word (or press Enter to end your turn): ";
         getline(cin, guessedWord);
 
         makeAllCaps(guessedWord);
-        cout << guessedWord << endl; // makeAllCaps works on linux
 
         if(guessedWord.empty()){
             playing = false;
         }else {
-            if(checkUserInput(guessedWord, boggle) && boggle.searchBoard(guessedWord)){
+            if(checkUserInput(guessedWord, boggle)){
                 boggle.addWord(guessedWord);
                 cout << "You've found a new word! " << "\"" << guessedWord << "\"" << endl;
-            }else {
-                cout << "That's not a word!" << endl;
-                }
+            }
         }   
     }
 }
@@ -125,12 +123,16 @@ void displayRobotResult(Boggle& boggle){
 
 void robotRound(Boggle& boggle){
         cout << "It's my turn!" << endl;
+        auto start = chrono::system_clock::now();
         boggle.autoSearch();
+        auto end = chrono::system_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start);
+        cout << "Computational time: " << elapsed.count() << " ms" << endl;
         displayRobotResult(boggle);
 }
 
 
-bool checkUserInput(const string& userWord, Boggle& boggle){
+bool checkUserInput(string& userWord, Boggle& boggle){
     if(!boggle.isInDictionary(userWord)){
         cout << userWord << " could not be found in dictionary" << endl;
         return false;
@@ -139,6 +141,9 @@ bool checkUserInput(const string& userWord, Boggle& boggle){
         return false;
     } else if (!boggle.isUnique(userWord)) {
         cout << "Looks like you've used " << userWord << " already!" << endl;
+        return false;
+    } else if (!boggle.searchBoard(userWord)) {
+        cout << "That word cannot be formed on this board!" << endl;
         return false;
     }
     return true;
