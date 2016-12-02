@@ -4,17 +4,11 @@
 // TODO: remove this comment header
 
 #include "encoding.h"
+#include "bitstream.h"
 #include <vector>
 #include <queue>
 // TODO: include any other headers you need
 using namespace std;
-
-template<typename T> void print_queue(T& q){
-    while(!q.empty()) {
-        cout << *q.top() << endl;
-        q.pop();
-    }
-}
 
 map<int, int> buildFrequencyTable(istream& input) {
     // Can't handle certain characters yet!
@@ -24,7 +18,7 @@ map<int, int> buildFrequencyTable(istream& input) {
     while(input.get(c)){
         freqTable[c] += 1;
     }
-    freqTable[256] = 1;
+    freqTable[PSEUDO_EOF] = 1;
 
     return freqTable;
 }
@@ -43,7 +37,7 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
         HuffmanNode *t2 = binTree.top();
         binTree.pop();
         int freq = t1->count + t2->count;
-        HuffmanNode *T = new HuffmanNode(257, freq, t1, t2);
+        HuffmanNode *T = new HuffmanNode(NOT_A_CHAR, freq, t1, t2);
         binTree.push(T);
     }
 
@@ -52,13 +46,50 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 }
 
 map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
-    // TODO: implement this function
+    map<int, string> encodingMapOne;
     map<int, string> encodingMap;
-    return encodingMap;
+    if(encodingTree->character != NOT_A_CHAR){
+        encodingMap[encodingTree->character] = "";
+        return encodingMap;
+    } else {
+        encodingMapOne = buildEncodingMap(encodingTree->one);
+        for(auto const &key : encodingMapOne){
+            encodingMapOne[key.first] += "1";
+        }
+
+        encodingMap = buildEncodingMap(encodingTree->zero);
+        for(auto const &key : encodingMap){
+            encodingMap[key.first] += "0";
+        }
+
+        for(auto const &key : encodingMapOne){
+            encodingMap[key.first] = key.second;
+        }
+        return encodingMap;
+    }
 }
 
 void encodeData(istream& input, const map<int, string> &encodingMap, obitstream& output) {
-    // TODO: implement this function
+    char c;
+    string bitWord;
+    while(input.get(c)){
+        for(auto const &key : encodingMap){
+            if(key.first == c){
+                bitWord += key.second;
+            }
+        }
+    }
+
+    for(auto const &key : encodingMap){
+        if(key.first == PSEUDO_EOF){
+            bitWord += key.second;
+        }
+    }
+
+    for(auto const bit : bitWord){
+        int bitt = bit - '0';
+        output.writeBit(bitt);
+    }
 }
 
 void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
@@ -74,5 +105,11 @@ void decompress(ibitstream& input, ostream& output) {
 }
 
 void freeTree(HuffmanNode* node) {
-    // TODO: implement this function
+    if(node == nullptr){
+    }else if(node->character != NOT_A_CHAR){
+        delete node;
+    } else {
+        freeTree(node->one);
+        freeTree(node->zero);
+    }
 }
