@@ -14,7 +14,7 @@ map<int, int> buildFrequencyTable(istream& input) {
     // Can't handle certain characters yet!
     map<int, int> freqTable;
 
-    char c;
+    char c; //will the program fail if we use int here instead?
     while(input.get(c)){
         freqTable[c] += 1;
     }
