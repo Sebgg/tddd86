@@ -49,15 +49,18 @@ map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
     map<int, string> encodingMapOne;
     map<int, string> encodingMap;
     if(encodingTree->isLeaf()){
+        // Set all nodes value to nothing at the start. This case 1
         encodingMap[encodingTree->character] = "";
         return encodingMap;
     } else {
+        // Now decide whether to be 1 or 0.
         encodingMapOne = buildEncodingMap(encodingTree->one);
         for(auto const &key : encodingMapOne){
             encodingMapOne[key.first] += "1";
         }
 
         encodingMap = buildEncodingMap(encodingTree->zero);
+         // Now decide whether to be 1 or 0. This case 0
         for(auto const &key : encodingMap){
             encodingMap[key.first] += "0";
         }
@@ -93,7 +96,15 @@ void encodeData(istream& input, const map<int, string> &encodingMap, obitstream&
 }
 
 void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
-    // TODO: implement this function
+    // Take ze decoded bitstream and follow the 1's n' 0's until you reach a character
+    // Then Put that char in output. Simple!
+    int b;
+    string decoded;
+    HuffmanNode *currNode = encodingTree; // Would want this to be root. Starting point.
+    while(input.readBit(c){
+        // Do amazing things in here.
+        // Preferably we want to traverse with the read bit.
+    } 
 }
 
 void compress(istream& input, obitstream& output) {
