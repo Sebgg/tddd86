@@ -14,7 +14,7 @@ map<int, int> buildFrequencyTable(istream& input) {
     // Can't handle certain characters yet!
     map<int, int> freqTable;
 
-    int c; //will the program fail if we use int here instead?
+    char c; //will the program fail if we use int here instead?
     while(input.get(c)){
         freqTable[c] += 1;
     }
@@ -48,7 +48,7 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
     map<int, string> encodingMapOne;
     map<int, string> encodingMap;
-    if(encodingTree.isLeaf()){
+    if(encodingTree->isLeaf()){
         encodingMap[encodingTree->character] = "";
         return encodingMap;
     } else {
@@ -106,7 +106,7 @@ void decompress(ibitstream& input, ostream& output) {
 
 void freeTree(HuffmanNode* node) {
     if(node == nullptr){
-    }else if(node.isLeaf()){
+    }else if(node->isLeaf()){
         delete node;
     } else {
         freeTree(node->one);
