@@ -98,13 +98,26 @@ void encodeData(istream& input, const map<int, string> &encodingMap, obitstream&
 void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
     // Take ze decoded bitstream and follow the 1's n' 0's until you reach a character
     // Then Put that char in output. Simple!
-    int b;
-    string decoded;
-    HuffmanNode *currNode = encodingTree; // Would want this to be root. Starting point.
-    while(input.readBit(c){
-        // Do amazing things in here.
-        // Preferably we want to traverse with the read bit.
-    } 
+    int bitt;
+    string decodeStr; // May not be needed. We could just cout the chars as they're found.
+    HuffmanNode* root = encodingTree;
+    HuffmanNode *currNode = root;// Would want this to be root. Starting point.
+    while(input.readBit(bitt){
+        if(bitt == 1){
+            currNode = currNode->one; // Change currNode to right child of itself.
+            if(currNode->isLeaf()){
+                decodedStr += currNode.character;
+                currNode = root;
+            }       
+        }else if(bitt == 0){
+            currNode = currNode->zero; // Change currNode to its left child.
+            if(currNode->isLeaf()){
+                decodeStr += currNode->character;
+                currNode = root;
+            }
+        }
+    }
+    cout << decodeStr << endl;
 }
 
 void compress(istream& input, obitstream& output) {
