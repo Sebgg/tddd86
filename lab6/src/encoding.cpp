@@ -102,7 +102,8 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
     string decodedStr; // May not be needed. We could just cout the chars as they're found.
     HuffmanNode* root = encodingTree;
     HuffmanNode *currNode = root;// Would want this to be root. Starting point.
-    while(bitt == input.readBit()){
+    while(input.readBit()){
+        bitt = input.readBit();
         if(bitt == 1){
             currNode = currNode->one; // Change currNode to right child of itself.
             if(currNode->isLeaf()){
@@ -117,7 +118,6 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
             }
         }
     }
-    cout << decodedStr << endl;
 }
 
 void compress(istream& input, obitstream& output) {
