@@ -46,7 +46,6 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 }
 
 map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
-    map<int, string> encodingMapOne;
     map<int, string> encodingMap;
     if(encodingTree->isLeaf()){
         // Set all nodes value to nothing at the start. This case 1
@@ -54,20 +53,15 @@ map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
         return encodingMap;
     } else {
         // Now decide whether to be 1 or 0.
-        encodingMapOne = buildEncodingMap(encodingTree->one);
-        for(auto const &key : encodingMapOne){
-            encodingMapOne[key.first] += "1";
+        for(auto const &key : buildEncodingMap(encodingTree->one)){
+            encodingMap[key.first] = "1" + key.second;
         }
 
-        encodingMap = buildEncodingMap(encodingTree->zero);
          // Now decide whether to be 1 or 0. This case 0
-        for(auto const &key : encodingMap){
-            encodingMap[key.first] += "0";
+        for(auto const &key : buildEncodingMap(encodingTree->zero)){
+            encodingMap[key.first] = "0" + key.second;
         }
 
-        for(auto const &key : encodingMapOne){
-            encodingMap[key.first] = key.second;
-        }
         return encodingMap;
     }
 }
