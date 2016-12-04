@@ -118,12 +118,17 @@ void compress(istream& input, obitstream& output) {
     HuffmanNode* rootNode = buildEncodingTree(freqTable);
     map<int,string> encMap = buildEncodingMap(rootNode);
     
-    
     output.put('{');
     for(auto const &key : freqTable){
-        output.put(key.first);
+        string tmp1 = to_string(key.first);
+        for(auto const &c1 : tmp1){
+            output.put(c1); 
+        }
         output.put(':');
-        output.put(key.second);
+        string tmp2 = to_string(key.second);
+        for(auto const &c2 : tmp2){
+            output.put(c2);
+        }
         output.put(',');
         // output.put(' '); UNECESSARY, why waste space yao.
     }
@@ -134,7 +139,33 @@ void compress(istream& input, obitstream& output) {
 }
 
 void decompress(ibitstream& input, ostream& output) {
-    // TODO: implement this function
+    map<int, int> freqTable;
+    string header = input.getLine();
+    header.erase(header.begin());
+    header.erase(header.end());
+    string key;
+    string freq;
+    while(!header.empty()){
+        int i = 0;
+        while(header[i] != ':'){
+            key += header[i];
+            i++;
+        }
+        i++;
+        while(header[i] != ','){
+            freq += header[i];
+            i++;
+        }
+        i++;
+        int actualKey = atoi(key);
+        int actualFreq = atoi(freq);
+        freqTable[actualKey] = actualFreq;
+        header.erase(header.begin(), i);
+        // NOTE this may not work at all 
+    }
+    HuffmanNode* root = buildEncodingTree(freqTable);
+    decodeData(input, root, output);
+    freeTree(root);
 }
 
 void freeTree(HuffmanNode* node) {
