@@ -95,21 +95,17 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
     int bitt;
     HuffmanNode* root = encodingTree;
     HuffmanNode *currNode = root;// Would want this to be root. Starting point.
-    while(true){
+    while(!input.fail()){
         bitt = input.readBit();
         if(bitt == 1){
             currNode = currNode->one; // Change currNode to right child of itself.
-            if(currNode->character == PSEUDO_EOF){
-                break;
-            }else if(currNode->isLeaf()){
+            if(currNode->isLeaf()){
                 output.put(currNode->character);
                 currNode = root;
             }       
         }else if(bitt == 0){
             currNode = currNode->zero; // Change currNode to its left child.
-            if(currNode->character == PSEUDO_EOF){
-                break;
-            }else if(currNode->isLeaf()){
+            if(currNode->isLeaf()){
                 output.put(currNode->character);
                 currNode = root;
             }
@@ -118,7 +114,30 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
 }
 
 void compress(istream& input, obitstream& output) {
-    // TODO: implement this function
+    map<int, int> freqTable = buildFrequencyTable(input);
+    HuffmanNode* rootNode = buildEncodingTree(freqTable);
+    map<int,string> encMap = buildEncodingMap(rootNode);
+    
+    
+    output.put('{');
+    for(auto const &key : freqTable){
+        for(auto const &c1 : key.first){
+            output.put(c1);
+        }
+        output.put(':');
+        for(auto const &c2 : key.second){
+            output.put(c2);
+        }
+        output.put(',');
+        // output.put(' '); UNECESSARY, why waste space yao.
+    }
+    output.put('}');
+    encodeData(input, encMap, output);
+    output.flush();
+    string text = output.str();
+    cout << "hej" << text << endl;
+    freeTree(rootNode);
+
 }
 
 void decompress(ibitstream& input, ostream& output) {
