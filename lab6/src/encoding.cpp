@@ -101,17 +101,21 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
     int bitt;
     HuffmanNode* root = encodingTree;
     HuffmanNode *currNode = root;// Would want this to be root. Starting point.
-    while(input.readBit()){
+    while(true){
         bitt = input.readBit();
         if(bitt == 1){
             currNode = currNode->one; // Change currNode to right child of itself.
-            if(currNode->isLeaf()){
+            if(currNode->character == PSEUDO_EOF){
+                break;
+            }else if(currNode->isLeaf()){
                 output.put(currNode->character);
                 currNode = root;
             }       
         }else if(bitt == 0){
             currNode = currNode->zero; // Change currNode to its left child.
-            if(currNode->isLeaf()){
+            if(currNode->character == PSEUDO_EOF){
+                break;
+            }else if(currNode->isLeaf()){
                 output.put(currNode->character);
                 currNode = root;
             }
