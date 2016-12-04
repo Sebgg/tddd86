@@ -121,21 +121,14 @@ void compress(istream& input, obitstream& output) {
     
     output.put('{');
     for(auto const &key : freqTable){
-        for(auto const &c1 : key.first){
-            output.put(c1);
-        }
+        output.put(key.first);
         output.put(':');
-        for(auto const &c2 : key.second){
-            output.put(c2);
-        }
+        output.put(key.second);
         output.put(',');
         // output.put(' '); UNECESSARY, why waste space yao.
     }
     output.put('}');
     encodeData(input, encMap, output);
-    output.flush();
-    string text = output.str();
-    cout << "hej" << text << endl;
     freeTree(rootNode);
 
 }
