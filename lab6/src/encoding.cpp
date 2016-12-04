@@ -140,27 +140,31 @@ void compress(istream& input, obitstream& output) {
 
 void decompress(ibitstream& input, ostream& output) {
     map<int, int> freqTable;
-    string header = input.getLine();
-    header.erase(header.begin());
-    header.erase(header.end());
+    string header;
+
     string key;
     string freq;
-    while(!header.empty()){
+    while(input.getline(header)){
+        header.erase(header.begin());
         int i = 0;
-        while(header[i] != ':'){
-            key += header[i];
+        while(header[i] != '}'){
+            int j = i - 1;
+            while(header[i] != ':'){
+                key += header[i];
+                i++;
+            }
             i++;
-        }
-        i++;
-        while(header[i] != ','){
-            freq += header[i];
+            while(header[i] != ','){
+                freq += header[i];
+                i++;
+            }
             i++;
+            int actualKey = atoi(key.c_str());
+            int actualFreq = atoi(freq.c_str());
+            freqTable[actualKey] = actualFreq;
+            header.erase(0, i);
         }
-        i++;
-        int actualKey = atoi(key);
-        int actualFreq = atoi(freq);
-        freqTable[actualKey] = actualFreq;
-        header.erase(header.begin(), i);
+        break;
         // NOTE this may not work at all 
     }
     HuffmanNode* root = buildEncodingTree(freqTable);
