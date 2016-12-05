@@ -1,28 +1,34 @@
-// This is the CPP file you will edit and turn in.
-// Also remove these comments here and add your own, along with
-// comments on every function and on complex code sections.
-// TODO: remove this comment header
-
 #include "encoding.h"
 #include "bitstream.h"
+#include "HuffmanNode.h"
 #include <vector>
 #include <queue>
-// TODO: include any other headers you need
+#include <iostream>
+
 using namespace std;
 
+/*
+ * Builds the frequency table for the input stream.
+ */
 map<int, int> buildFrequencyTable(istream& input) {
-    // Can't handle certain characters yet!
     map<int, int> freqTable;
 
-    char c;
-    while(input.get(c)){
+    int c = input.get();
+    while(c != -1){
         freqTable[c] += 1;
+        c = input.get();
     }
-    freqTable[PSEUDO_EOF] = 1;
 
+    freqTable[PSEUDO_EOF] = 1;
     return freqTable;
 }
 
+/*
+ * builds the encoding tree with the help of a priority queue.
+ *
+ * cmpNodes is a lambda function that sorts the node based on frequency,
+ * in order smallest to largest.
+ */
 HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
     auto cmpNodes = [](const HuffmanNode *left, const HuffmanNode *right){return *left < *right; };
     priority_queue<HuffmanNode, vector<HuffmanNode*>, decltype(cmpNodes)> binTree(cmpNodes);
@@ -45,9 +51,14 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
     return root;
 }
 
+/*
+ * Creates the binary codes for each character in the encoding tree.
+ */
 map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
     map<int, string> encodingMap;
-    if(encodingTree->isLeaf()){
+    if(encodingTree == nullptr){ //Returns empty encodingmap if encodingTree is nullptr.
+        return encodingMap;
+    }else if(encodingTree->isLeaf()){
         // Set all nodes value to nothing at the start. This case 1
         encodingMap[encodingTree->character] = "";
         return encodingMap;
@@ -66,58 +77,72 @@ map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
     }
 }
 
+/*
+ * Encodes the input to binary with help from the encodingmap and writes it bit by bit to output
+ */
 void encodeData(istream& input, const map<int, string> &encodingMap, obitstream& output) {
-    char c;
     string bitWord;
-    while(input.get(c)){
+    int c = input.get();
+    while(c != -1){
         for(auto const &key : encodingMap){
             if(key.first == c){
                 bitWord += key.second;
             }
         }
+        c = input.get();
     }
 
-    for(auto const &key : encodingMap){
-        if(key.first == PSEUDO_EOF){
-            bitWord += key.second;
-        }
-    }
+    bitWord += encodingMap.find(PSEUDO_EOF)->second;
 
-    for(auto const bit : bitWord){
-        int bitt = bit - '0';
-        output.writeBit(bitt);
+    for(auto const &bitt : bitWord){
+        int bit = bitt - '0'; //Converts char to int
+        output.writeBit(bit);
     }
 }
 
+/*
+ * Decodes the binary data with the help of the encodingtree and writes it in ascii to output.
+ */
 void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
-    // Take ze decoded bitstream and follow the 1's n' 0's until you reach a character
-    // Then Put that char in output. Simple!
     int bitt;
     HuffmanNode* root = encodingTree;
-    HuffmanNode *currNode = root;// Would want this to be root. Starting point.
+    HuffmanNode *currNode = root;// Set start point for traverse.
     while(!input.fail()){
         bitt = input.readBit();
         if(bitt == 1){
             currNode = currNode->one; // Change currNode to right child of itself.
             if(currNode->isLeaf()){
                 output.put(currNode->character);
+                if(currNode->character == PSEUDO_EOF){
+                    break;
+                }
                 currNode = root;
             }       
         }else if(bitt == 0){
             currNode = currNode->zero; // Change currNode to its left child.
             if(currNode->isLeaf()){
                 output.put(currNode->character);
+                if(currNode->character == PSEUDO_EOF){
+                    break;
+                }
                 currNode = root;
             }
         }
     }
 }
 
+/*
+ * Compresses the input by calling memberfunctions of encoding.cpp,
+ * and writes to a file.
+ */
 void compress(istream& input, obitstream& output) {
     map<int, int> freqTable = buildFrequencyTable(input);
     HuffmanNode* rootNode = buildEncodingTree(freqTable);
     map<int,string> encMap = buildEncodingMap(rootNode);
-    
+
+    input.clear();
+    input.seekg(0, ios::beg); //Resets input, so it can be used in encodeData
+
     output.put('{');
     for(auto const &key : freqTable){
         string tmp1 = to_string(key.first);
@@ -129,49 +154,54 @@ void compress(istream& input, obitstream& output) {
         for(auto const &c2 : tmp2){
             output.put(c2);
         }
+        //Comma after every pair because it is used as a flag when reading the header.
         output.put(',');
-        // output.put(' '); UNECESSARY, why waste space yao.
     }
     output.put('}');
+    output.put('\n');
     encodeData(input, encMap, output);
     freeTree(rootNode);
-
 }
 
+/*
+ * Decompresses the input stream and writes it to output file by calling memberfunctions of encoding.cpp.
+ */
 void decompress(ibitstream& input, ostream& output) {
     map<int, int> freqTable;
     string header;
-
     string key;
     string freq;
-    while(input.getline(header)){
-        header.erase(header.begin());
-        int i = 0;
-        while(header[i] != '}'){
-            int j = i - 1;
-            while(header[i] != ':'){
-                key += header[i];
-                i++;
-            }
-            i++;
-            while(header[i] != ','){
-                freq += header[i];
-                i++;
-            }
-            i++;
-            int actualKey = atoi(key.c_str());
-            int actualFreq = atoi(freq.c_str());
-            freqTable[actualKey] = actualFreq;
-            header.erase(0, i);
-        }
-        break;
-        // NOTE this may not work at all 
+    string pair;
+    int keyI;
+    int freqI;
+
+    getline(input, header);
+
+    //Remove the brackets in the beginning and end of the header.
+    header.erase(header.begin());
+    header.pop_back();
+
+    while(!header.empty()){ //Fills the frequency table with the given header frequencies.
+        pair = header.substr(0, header.find_first_of(','));
+        key = pair.substr(0, pair.find_first_of(':'));
+        freq = pair.substr(pair.find_first_of(':')+1, pair.back());
+        keyI = atoi(key.c_str());
+        freqI = atoi(freq.c_str());
+        freqTable[keyI] = freqI;
+        header.erase(0, header.find_first_of(',')+1);
     }
+
     HuffmanNode* root = buildEncodingTree(freqTable);
     decodeData(input, root, output);
     freeTree(root);
 }
 
+/*
+ * Destroys the tree and deallocates all of its allocated memory.
+ * If tree is a nullptr it will do nothing. If this is not handled,
+ * it will crash if you try to destroy a tree that's already been
+ * destroyed.
+ */
 void freeTree(HuffmanNode* node) {
     if(node == nullptr){
     }else if(node->isLeaf()){
