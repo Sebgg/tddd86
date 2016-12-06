@@ -28,13 +28,9 @@ static string CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every
    "EIOSST", "ELRTTY", "HIMNQU", "HLNNRZ"
 };
 
-void Boggle::makeBoard(const string& randomize, const string& board){
-    playerScore = 0;
-    robotScore = 0;
-    english.addWordsFromFile(DICTIONARY_FILE);
-    grid.resize(BOARD_SIZE, BOARD_SIZE);
+void Boggle::makeBoard(const bool& randomize, const string& board){
     vector<Cube*> cubes;
-    if(randomize == "Y" || randomize == "y"){
+    if(randomize){
         for(const auto& s : CUBES){
             Cube *c = new Cube(s);
             c->setRandom();
@@ -102,7 +98,7 @@ void Boggle::autoSearch(){
 }
 
 void Boggle::autoSearchHelp(int nRow, int nCol, string word){
-    if(isInDictionary(word) && isLegit(word) && isUnique(word) && isRUnique(word)){
+    if(isLegit(word) && isUnique(word) && isRUnique(word) && isInDictionary(word)){
         addScore(word, 'r');
         robotWords.push_back(word);
         if(english.containsPrefix(word)){ // Don't stop if there are longer words with word in it e.g. cube n' cubes
@@ -126,7 +122,7 @@ void Boggle::autoSearchHelp(int nRow, int nCol, string word){
     }
 }
 
-bool Boggle::checkForInvalid(const string& board){
+bool Boggle::checkForInvalid(const string& board) const{
     for(const auto& c : board){
         if(ALPHABET.find_first_of(c) == string::npos){
             return false;
@@ -135,30 +131,30 @@ bool Boggle::checkForInvalid(const string& board){
     return true;
 }
 
-bool Boggle::isLegit(const string& word){
+bool Boggle::isLegit(const string& word) const{
     return word.size() >= MIN_WORD_LENGTH;
 }
 
 
-bool Boggle::isInDictionary(const string& word){
+bool Boggle::isInDictionary(const string& word) const{
     return (english.contains(word));
 }
 
-bool Boggle::isUnique(const string& word){
+bool Boggle::isUnique(const string& word) const{
     for(const auto &s : foundWords){
         if(word == s) return false;
     }
     return true;
 }
 
-bool Boggle::isRUnique(const string &word){
+bool Boggle::isRUnique(const string &word) const{
     for(const auto &s : robotWords){
         if(word == s) return false;
     }
     return true;
 }
 
-string Boggle::printGrid() {
+string Boggle::grid_toString() {
     string board;
     for(size_t i = 0; i < BOARD_SIZE; i++){
         for(size_t j = 0; j < BOARD_SIZE; j++){
@@ -182,7 +178,7 @@ void Boggle::setGrid(vector<Cube*>& cubes) {
     }
 }
 
-string Boggle::printFoundWords(){
+string Boggle::p_toString(){
     string Words = "{";
     for(const auto word : foundWords){
         Words += "\"";
@@ -196,7 +192,7 @@ string Boggle::printFoundWords(){
     return Words;
 }
 
-string Boggle::printRobotResult(){
+string Boggle::r_toString(){
     string Words = "{";
     for(const auto word : robotWords){
         Words += "\"";
@@ -210,11 +206,11 @@ string Boggle::printRobotResult(){
     return Words;
 }
 
-vector<string> Boggle::getFoundWords(){
+vector<string> Boggle::getFoundWords() const{
     return foundWords;
 }
 
-vector<string> Boggle::getRobotWords(){
+vector<string> Boggle::getRobotWords() const{
     return robotWords;
 }
 
@@ -232,12 +228,19 @@ void Boggle::addScore(const string &word, const char& unit){
     }
 }
 
-int Boggle::getScore(const char &unit){
+int Boggle::getScore(const char &unit) const{
     if(unit == 'p'){
         return playerScore;
     } else {
         return robotScore;
     }
+}
+
+void Boggle::initGame(){
+    playerScore = 0;
+    robotScore = 0;
+    english.addWordsFromFile(DICTIONARY_FILE);
+    grid.resize(BOARD_SIZE, BOARD_SIZE);
 }
 
 void Boggle::resetGame() {

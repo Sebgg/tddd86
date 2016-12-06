@@ -49,7 +49,9 @@ void makeAllCaps(string& userWord);
  * Plays one game of Boggle using the given boggle game state object.
  */
 void playOneGame(Boggle& boggle) {
+    boggle.initGame();
     string makeCustom;
+    bool randomize = true;
     cout << "Do you want to randomly generate a board? ";
     getline(cin, makeCustom);
     while(!(makeCustom == "Y" || makeCustom == "y" ||
@@ -61,6 +63,7 @@ void playOneGame(Boggle& boggle) {
     string board = "";
 
     if(makeCustom == "N" || makeCustom == "n") {
+        randomize = false;
         cout << "Write the 16 letters you want to use" << endl;
         getline(cin, board);
         while(board.size() != NUM_CUBES || !boggle.checkForInvalid(board)){
@@ -71,7 +74,7 @@ void playOneGame(Boggle& boggle) {
         makeAllCaps(board);
     }
 
-    boggle.makeBoard(makeCustom, board);
+    boggle.makeBoard(randomize, board);
     playerRound(boggle);
     robotRound(boggle);
     boggle.resetGame();
@@ -150,11 +153,9 @@ bool checkUserInput(string& userWord, Boggle& boggle){
 }
 
 void makeAllCaps(string& userWord){
-     for(int i=0; userWord[i] != 0; i++){
-        if(userWord[i]<=122 && userWord[i]>=97){
-            userWord[i] -= 32;
-        }
-    }
+     for(auto &c : userWord){
+         c = toupper(c);
+     }
 }
 
 

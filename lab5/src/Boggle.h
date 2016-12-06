@@ -18,7 +18,7 @@ public:
     /*
      * Checks if the word is at least 4 characters long
      */
-    bool isLegit(const string& word);
+    bool isLegit(const string& word) const;
 
     /*
      * Robot searches through board to find every word.
@@ -28,37 +28,37 @@ public:
     /*
      * Checks if word can be found in English dictionary
      */
-    bool isInDictionary(const string& word);
+    bool isInDictionary(const string& word) const;
 
     /*
      * Checks if the word has been used before by the user
      */
-    bool isUnique(const string& word);
+    bool isUnique(const string& word) const;
 
     /*
      * Checks if the word has been used before by the computer
      */
-    bool isRUnique(const string& word);
+    bool isRUnique(const string& word) const;
 
     /*
      * Creates the board, lexicon, and the cube objects
      */
-    void makeBoard(const string& randomize, const string& board);
+    void makeBoard(const bool& randomize, const string& board);
 
     /*
-     * Prints all user words
+     * Builds player's words as a string to be printed in terminal
      */
-    string printFoundWords();
+    string p_toString();
 
     /*
      * Returns the vector containing user's words
      */
-    vector<string> getFoundWords();
+    vector<string> getFoundWords() const;
 
     /*
      * Returns the vector containing computer's words
      */
-    vector<string> getRobotWords();
+    vector<string> getRobotWords() const;
 
     /*
      * Adds valid word to foundWords
@@ -76,24 +76,29 @@ public:
     bool searchBoard(string& word);
 
     /*
-     * Prints computer words and score to terminal output
+     * Builds robot's words as a string to be printed in terminal
      */
-    string printRobotResult();
+    string r_toString();
 
     /*
      * Returns the score of either player och computer, depending on input char
      */
-    int getScore(const char& unit);
+    int getScore(const char& unit) const;
 
     /*
-     * Prints grid to terminal output
+     * Builds grid as a string to be printed in terminal
      */
-    string printGrid();
+    string grid_toString();
 
     /*
      * Controls that the input for custom board only contains letters
      */
-    bool checkForInvalid(const string& board);
+    bool checkForInvalid(const string& board) const;
+
+    /*
+     * Set initial values for the game to function.
+     */
+    void initGame();
 
 private:
 
