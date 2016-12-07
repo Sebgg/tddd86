@@ -153,8 +153,6 @@ void play(vector<string>& dictionary, map<string, vector<string> >& families, st
             readDictionary(dictionary, wordLength);
         }
 
-        cout << "Poop: " << dictionary.size() << endl;
-
         cout << "How many guesses do you want? (1-26)" << endl;
         cin >> guessCnt;
 
