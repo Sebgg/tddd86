@@ -83,7 +83,7 @@ void playOneGame(Boggle& boggle) {
 
 void displayPlayerstats(Boggle& boggle){
     cout << "Your words " << "(" << boggle.getFoundWords().size() << "): "
-    << boggle.printFoundWords() << endl;
+    << boggle.p_toString() << endl;
 
     cout << "Your score: " << boggle.getScore('p') << endl;
 
@@ -93,7 +93,7 @@ void playerRound(Boggle& boggle) {
     string guessedWord;
     bool playing = true;
     while (playing){
-        cout << boggle.printGrid() << endl;
+        cout << boggle.grid_toString() << endl;
         displayPlayerstats(boggle);
         cout << "Type a word (or press Enter to end your turn): ";
         getline(cin, guessedWord);
@@ -113,7 +113,7 @@ void playerRound(Boggle& boggle) {
 
 void displayRobotResult(Boggle& boggle){
     cout << "My words " << "(" << boggle.getRobotWords().size() << "): "
-    << boggle.printRobotResult() << endl;
+    << boggle.r_toString() << endl;
 
     cout << "My score: " << boggle.getScore('r') << endl;
 
