@@ -12,13 +12,14 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <chrono>
 #include "Point.h"
 #include "Tour.h"
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    string filename = "tsp10.txt";
+    string filename = "mona-100k.txt";
     ifstream input;
     //input.open("/Users/Hampus/Documents/C++/Qt Projects/tddd86/labb3/tsp/res/"+filename); //MAC
 
@@ -42,22 +43,26 @@ int main(int argc, char *argv[]) {
     Tour tour;
     double x;
     double y;
+    auto start = chrono::system_clock::now();
     while (input >> x >> y) {
         Point p(x, y);
         tour.insertNearest(p);
         //tour.draw(scene);
         //Why draw the whole tour every time we add a point?
         //Isn't the point to call draw when it's done?
-        std::chrono::milliseconds dura(50);
-        std::this_thread::sleep_for(dura);
+        //std::chrono::milliseconds dura(50);
+        //std::this_thread::sleep_for(dura);
         a.processEvents();
     }
+    auto end = chrono::system_clock::now();
+    auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start);
     input.close();
     // print tour to standard output
     cout << "Tour distance: " << std::fixed << std::setprecision(4)
          << std::showpoint << tour.distance() << endl;
     cout << "Number of points: " << tour.size() << endl;
     tour.show();
+    cout << "Computational time: " << elapsed.count() << " ms" << endl;
 
     // draw tour
     tour.draw(scene);

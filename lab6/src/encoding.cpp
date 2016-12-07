@@ -84,11 +84,7 @@ void encodeData(istream& input, const map<int, string> &encodingMap, obitstream&
     string bitWord;
     int c = input.get();
     while(c != -1){
-        for(auto const &key : encodingMap){
-            if(key.first == c){
-                bitWord += key.second;
-            }
-        }
+        bitWord += encodingMap.find(c)->second;
         c = input.get();
     }
 
