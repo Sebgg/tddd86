@@ -36,11 +36,11 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
     vector<Vertex*> path;
     vector<Vertex*> tmpPath;
     PriorityQueue<Node *> que;
-    Set<Node *> vertexSet = graph.getVertexSet();
+    Set<Node*> vertexSet = graph.getVertexSet();
     path.push_back(start);
     for(auto vertex : vertexSet){
         if(graph.compare(start, vertex) != 0){
-            vertex->cost = numeric_limits<double>::max();
+            vertex->cost = numeric_limits<int>::max();
         }
         que.enqueue(vertex, vertex->cost);
     }
@@ -48,6 +48,7 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
     while(!que.isEmpty()){
         Vertex *u = que.dequeue();
         u->setColor(GREEN);
+
         if(graph.compare(u, end) == 0){
             while(u->previous != nullptr){
                 tmpPath.push_back(u);
@@ -56,6 +57,9 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
             while(!tmpPath.empty()){
                 path.push_back(tmpPath.back());
                 tmpPath.pop_back();
+            }
+            for(auto node : graph.getNodeSet()){
+                node->previous = nullptr;
             }
             break;
         }
@@ -68,7 +72,6 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
             }
         }
     }
-
     return path;
 }
 
