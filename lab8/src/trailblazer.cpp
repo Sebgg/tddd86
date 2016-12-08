@@ -1,70 +1,63 @@
-// This is the CPP file you will edit and turn in.
-// Also remove these comments here and add your own, along with
-// comments on every function and on complex code sections.
-// TODO: write comment header for this file; remove this comment
+// Comment header goes here
 
 #include "costs.h"
 #include "trailblazer.h"
 #include "pqueue.h"
 #include <queue>
+#include <stack>
+#include <set>
 #include <limits>
 #include <algorithm>
-// TODO: include any other headers you need; remove this comment
+
+
 using namespace std;
 
-
-
+bool hasFreeNeighbour(const BasicGraph &graph, Node *curr);
+/*
+ * An iterative implementation of Depth First Search for path to target node.
+ */
 vector<Node *> depthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
     vector<Vertex*> path;
-    /*vector<Vertex*> tmpPath;
-    path.push_back(start);
-    start->visited = true;
-    if(graph.compare(start, end) == 0){
-        path.push_back(end);
-        start->setColor(GREEN);
-        return path;
-    } else {
-        for(auto neighbour : graph.getNeighbors(start)){
-            if(neighbour->visited == false){
-                neighbour->visited = true;
-                neighbour->setColor(YELLOW);
-                path.push_back(neighbour);
-                tmpPath = depthFirstSearch(graph, neighbour, end);
-                path.insert(path.end(), tmpPath.begin(), tmpPath.end());
-                return path;
-            } else {
-                neighbour->setColor(GRAY);
-                return path;
-            }
-        }
-    }*/
-
-}
-    /*
-    vector<Vertex*> tmpPath;
-    tmpPath.push_back(start);
+    stack<Vertex*> nodeStack;
+    nodeStack.push(start);
     Vertex *curr;
-    while(!tmpPath.empty()){
-        curr = tmpPath.front();
-        tmpPath.erase(tmpPath.begin());
+    start->cost = 0;
+    while(!nodeStack.empty()){
+        curr = nodeStack.top();
+        nodeStack.pop();
+        curr->setColor(GREEN);
         if(graph.compare(curr, end) == 0){
-            while(!tmpPath.empty()){
-                curr = tmpPath.front();
-                tmpPath.erase(tmpPath.begin());
-                curr->visited = false;
-                curr->setColor(GREEN);
-                path.push_back(curr);
-            }
+            path.push_back(curr);
+            break;
         }
         if(curr->visited == false){
             curr->visited = true;
-            for(auto node : graph.getNeighbors(curr)){
-                node->setColor(GRAY);
-                tmpPath.push_back(node);
+            path.push_back(curr);
+            for(auto neighbour : graph.getNeighbors(curr)){
+                if(!neighbour->visited){
+                    neighbour->cost = 1;
+                    neighbour->previous = curr;
+                    nodeStack.push(neighbour);
+                }
             }
         }
-    }*/
+        if(!hasFreeNeighbour(graph, curr)){
+            curr->setColor(GRAY);
+            nodeStack.push(curr->previous);
+            path.pop_back();
+        }
+    }
+    for(auto node : graph.getNodeSet()){
+        node->previous = nullptr;
+        node->visited = false;
+        node->cost = 0;
+    }
+    return path;
+}
 
+/*
+ * An iterative implmentation of Breadth First Search that finds a path to target node.
+ */
 vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
     vector<Vertex*> path;
     queue<Vertex*> tmpQ;
@@ -107,6 +100,9 @@ vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end)
     return path;
 }
 
+/*
+ * Implementation of the Djikstra algorithm as pathfinding.
+ */
 vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end) {
     vector<Vertex*> path;
     PriorityQueue<Node *> que;
@@ -150,27 +146,65 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
     return path;
 }
 
+/*
+ * Implementation of the A* algorithm.
+ */
 vector<Node *> aStar(BasicGraph& graph, Vertex* start, Vertex* end) {
     vector<Vertex*> path;
-    Set<Vertex*> closed;    //Already evaluated
-    Set<Vertex*> open;  //Still to be evaluated
+    PriorityQueue<Vertex*> open;        //Still to be evaluated
     double infinity = numeric_limits<int>::max();
 
-    open.add(start);
-
-    map<Vertex*, double> gScore;    //start->Vertex *v cost
-    map<Vertex*, double> fScore; //start->Vertex *v->end cost
+    map<Vertex*, double> fScore;    //start->Vertex *v->end cost
 
     for(auto node : graph.getNodeSet()){
-        gScore[node] = infinity;
+        node->cost= infinity;
         fScore[node] = infinity;
+        open.enqueue(node, node->cost);
     }
 
-    gScore[start] = 0;
+    start->cost = 0;
     fScore[start] = start->heuristic(end);
+    open.enqueue(start, start->cost);
 
     while(!open.isEmpty()){
-        break;
+        Node* curr = open.dequeue();
+        curr->setColor(GREEN);
+        if(graph.compare(curr, end) == 0){
+            while(curr->previous != nullptr){
+                path.push_back(curr);
+                curr = curr->previous;
+            }
+            path.push_back(start);
+            reverse(path.begin(), path.end());
+            for(auto node : graph.getNodeSet()){
+                node->previous = nullptr;
+                node->cost = 0;
+                node->visited = false;
+            }
+            break;
+        }
+        curr->visited = true;
+        for(auto neighbour : graph.getNeighbors(curr)){
+            if(!neighbour->visited){
+                double altG = curr->cost + curr->heuristic(neighbour);
+                if(altG < neighbour->cost){
+                    neighbour->setColor(YELLOW);
+                    neighbour->previous = curr;
+                    neighbour->cost = altG;
+                    fScore[neighbour] = altG + neighbour->heuristic(end);
+                    open.changePriority(neighbour, fScore[neighbour]);
+                }
+            }
+        }
     }
     return path;
+}
+
+bool hasFreeNeighbour(const BasicGraph &graph, Node* curr ) {
+    for(auto neighbour : graph.getNeighbors(curr)){
+        if(!neighbour->visited){
+            return true;
+        }
+    }
+    return false;
 }
