@@ -1,9 +1,4 @@
-/*
- * TDDD86 Pattern Recognition
- * This program computes and plots all line segments involving 4 points
- * in a file using Qt.
- */
-/*
+
 #include <QApplication>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -13,6 +8,9 @@
 #include <vector>
 #include <chrono>
 #include "Point.h"
+#include <utility>
+
+using namespace std;
 
 // constants
 static const int SCENE_WIDTH = 512;
@@ -28,11 +26,30 @@ void render_line(QGraphicsScene* scene, const Point& p1, const Point& p2) {
     p1.lineTo(scene, p2);
 }
 
+void cool_sort(vector<Point> points, const Point& oP, QGraphicsScene* scene){
+    map<double, vector<Point>> bucket;
+
+    for(Point p : points){
+        if(oP < p || oP > p){
+            bucket[oP.slopeTo(p)].push_back(p);
+        }
+    }
+
+    for(auto const &key : bucket){
+        if(key.second.size() >= 3){
+            vector<Point> tmpVec = key.second;
+            sort(tmpVec.begin(), tmpVec.end());
+            render_line(scene, oP, tmpVec.back());
+        }
+    }
+
+}
+
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
     // open file
-    string filename = "input100.txt";
+    string filename = "input50.txt";
     ifstream input;
     input.open(filename);
 
@@ -67,22 +84,8 @@ int main(int argc, char *argv[]) {
     // makes finding endpoints of line segments easy
     sort(points.begin(), points.end());
     auto begin = chrono::high_resolution_clock::now();
-
-    // iterate through all combinations of 4 points
-    for (int i = 0 ; i < N-3 ; ++i) {
-        for (int j = i+1 ; j < N-2 ; ++j) {
-            for (int k = j+1 ; k < N-1 ; ++k) {
-                //only consider fourth point if first three are collinear
-                if (points.at(i).slopeTo(points.at(j)) == points.at(i).slopeTo(points.at(k))) {
-                    for (int m{k+1} ; m < N ; ++m) {
-                        if (points.at(i).slopeTo(points.at(j)) == points.at(i).slopeTo(points.at(m))) {
-                            render_line(scene, points.at(i), points.at(m));
-                            a.processEvents(); // show rendered line
-                        }
-                    }
-                }
-            }
-        }
+    for(auto const &p : points){
+        cool_sort(points, p, scene);
     }
 
     auto end = chrono::high_resolution_clock::now();
@@ -92,4 +95,3 @@ int main(int argc, char *argv[]) {
 
     return a.exec(); // start Qt event loop
 }
-*/
