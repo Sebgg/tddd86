@@ -20,17 +20,17 @@ vector<Node *> depthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
     vector<Vertex*> path;
     stack<Vertex*> nodeStack;
     nodeStack.push(start);
-    Vertex *curr;
+
     start->cost = 0;
     while(!nodeStack.empty()){
-        curr = nodeStack.top();
+        Vertex *curr = nodeStack.top();
         nodeStack.pop();
         curr->setColor(GREEN);
         if(graph.compare(curr, end) == 0){
             path.push_back(curr);
             break;
         }
-        if(curr->visited == false){
+        if(!curr->visited){
             curr->visited = true;
             path.push_back(curr);
             for(auto neighbour : graph.getNeighbors(curr)){
@@ -46,6 +46,18 @@ vector<Node *> depthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
             nodeStack.push(curr->previous);
             path.pop_back();
         }
+    }
+    while(!nodeStack.empty()){
+        nodeStack.pop();
+        // ERRORS ONLY PRESENT WHEN RUNNING DPS ON MAZE 10
+// *** Error in `/home/hamer848/Documents/tddd86/build-Trailblazer-Desktop-Debug/Trailblazer': double free or corruption (out): 0x00000000085fc410 ***
+/*
+ ***
+ *** STANFORD C++ LIBRARY
+ *** An exception occurred during program execution:
+ *** std::bad_alloc
+ ***
+*/
     }
     for(auto node : graph.getNodeSet()){
         node->previous = nullptr;
