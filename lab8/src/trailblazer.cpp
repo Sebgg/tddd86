@@ -93,10 +93,7 @@ vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end)
             }
             path.push_back(start);
             reverse(path.begin(), path.end());
-            for(auto node : graph.getNodeSet()){
-                node->previous = nullptr;
-                node->cost = 0;
-            }
+            graph.resetData();
             break;
 
         }
@@ -138,10 +135,7 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
             }
             path.push_back(start);
             reverse(path.begin(), path.end());
-            for(auto node : graph.getNodeSet()){
-                node->previous = nullptr;
-                node->cost = 0;
-            }
+            graph.resetData();
             break;
         }
         for(auto neighbour : graph.getNeighbors(u)){
@@ -188,11 +182,7 @@ vector<Node *> aStar(BasicGraph& graph, Vertex* start, Vertex* end) {
             }
             path.push_back(start);
             reverse(path.begin(), path.end());
-            for(auto node : graph.getNodeSet()){
-                node->previous = nullptr;
-                node->cost = 0;
-                node->visited = false;
-            }
+            graph.resetData
             break;
         }
         curr->visited = true;
