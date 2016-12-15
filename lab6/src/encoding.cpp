@@ -160,7 +160,6 @@ void decompress(ibitstream& input, ostream& output) {
     string header;
     string key;
     string freq;
-    string pair;
     int keyI;
     int freqI;
 
@@ -172,13 +171,13 @@ void decompress(ibitstream& input, ostream& output) {
 
     while(!header.empty()){ //Fills the frequency table with the given header frequencies.
         if(header.find_first_of(',') != string::npos){
-            key = pair.substr(0, header.find_first_of(':'));
-            freq = pair.substr(header.find_first_of(':')+1, header.find_first_of(','));
+            key = header.substr(0, header.find_first_of(':'));
+            freq = header.substr(header.find_first_of(':')+1, header.find_first_of(','));
             header.erase(0, header.find_first_of(',')+1);
         }else if(header.find_first_of('}') != string::npos){
-            key = pair.substr(0, header.find_first_of(':'));
-            freq = pair.substr(header.find_first_of(':')+1, header.find_first_of('}'));
-            header.erase(0, header.find_first_of('}'));
+            key = header.substr(0, header.find_first_of(':'));
+            freq = header.substr(header.find_first_of(':')+1, header.find_first_of('}'));
+            header.erase(0, header.find_first_of('}')+1);
         }
         keyI = atoi(key.c_str());
         freqI = atoi(freq.c_str());
