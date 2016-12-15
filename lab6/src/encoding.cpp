@@ -106,24 +106,17 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
     while(!input.fail()){
         bitt = input.readBit();
         if(bitt == 1){
-            currNode = currNode->one; // Change currNode to right child of itself.
-            if(currNode->isLeaf()){
-                output.put(currNode->character);
-                if(currNode->character == PSEUDO_EOF){
-                    break;
-                }
-                currNode = root;
-            }       
+            currNode = currNode->one; // Change currNode to right child of itself.     
         }else if(bitt == 0){
             currNode = currNode->zero; // Change currNode to its left child.
-            if(currNode->isLeaf()){
-                output.put(currNode->character);
-                if(currNode->character == PSEUDO_EOF){
-                    break;
-                }
-                currNode = root;
-            }
         }
+        if(currNode->isLeaf()){
+            output.put(currNode->character);
+            if(currNode->character == PSEUDO_EOF){
+                break;
+            }
+            currNode = root;
+        }  
     }
 }
 
@@ -178,17 +171,18 @@ void decompress(ibitstream& input, ostream& output) {
     // header.pop_back(); consider bracket as a flag as well as comma
 
     while(!header.empty()){ //Fills the frequency table with the given header frequencies.
-        if(header.find_first_of(',') == string::npos){
-            pair = header.substr(0, header.find_first_of(','));
-        }else if(header.find_first_of('}') == string::npos){
-        pair = header.substr(0, header.find_first_of('}'))
+        if(header.find_first_of(',') != string::npos){
+            key = pair.substr(0, header.find_first_of(':'));
+            freq = pair.substr(header.find_first_of(':')+1, header.find_first_of(','));
+            header.erase(0, header.find_first_of(',')+1);
+        }else if(header.find_first_of('}') != string::npos){
+            key = pair.substr(0, header.find_first_of(':'));
+            freq = pair.substr(header.find_first_of(':')+1, header.find_first_of('}'));
+            header.erase(0, header.find_first_of('}'));
         }
-        key = pair.substr(0, pair.find_first_of(':'));
-        freq = pair.substr(pair.find_first_of(':')+1, pair.back());
         keyI = atoi(key.c_str());
         freqI = atoi(freq.c_str());
         freqTable[keyI] = freqI;
-        header.erase(0, header.find_first_of(',')+1);
     }
 
     HuffmanNode* root = buildEncodingTree(freqTable);
