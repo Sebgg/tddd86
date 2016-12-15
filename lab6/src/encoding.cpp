@@ -135,7 +135,6 @@ void compress(istream& input, obitstream& output) {
     map<int, int> freqTable = buildFrequencyTable(input);
     HuffmanNode* rootNode = buildEncodingTree(freqTable);
     map<int,string> encMap = buildEncodingMap(rootNode);
-
     input.clear();
     input.seekg(0, ios::beg); //Resets input, so it can be used in encodeData
 
@@ -150,8 +149,8 @@ void compress(istream& input, obitstream& output) {
         for(auto const &c2 : tmp2){
             output.put(c2);
         }
-        if(){
-        output.put(',');
+        if(key.first != freqTable.rbegin()->first){
+            output.put(',');
         }
     }
     output.put('}');
@@ -179,7 +178,11 @@ void decompress(ibitstream& input, ostream& output) {
     // header.pop_back(); consider bracket as a flag as well as comma
 
     while(!header.empty()){ //Fills the frequency table with the given header frequencies.
-        pair = header.substr(0, header.find_first_of(','));
+        if(header.find_first_of(',') == string::npos){
+            pair = header.substr(0, header.find_first_of(','));
+        }else if(header.find_first_of('}') == string::npos){
+        pair = header.substr(0, header.find_first_of('}'))
+        }
         key = pair.substr(0, pair.find_first_of(':'));
         freq = pair.substr(pair.find_first_of(':')+1, pair.back());
         keyI = atoi(key.c_str());
