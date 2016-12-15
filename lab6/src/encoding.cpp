@@ -170,12 +170,11 @@ void decompress(ibitstream& input, ostream& output) {
     // header.pop_back(); consider bracket as a flag as well as comma
 
     while(!header.empty()){ //Fills the frequency table with the given header frequencies.
+        key = header.substr(0, header.find_first_of(':'));
         if(header.find_first_of(',') != string::npos){
-            key = header.substr(0, header.find_first_of(':'));
             freq = header.substr(header.find_first_of(':')+1, header.find_first_of(','));
             header.erase(0, header.find_first_of(',')+1);
         }else if(header.find_first_of('}') != string::npos){
-            key = header.substr(0, header.find_first_of(':'));
             freq = header.substr(header.find_first_of(':')+1, header.find_first_of('}'));
             header.erase(0, header.find_first_of('}')+1);
         }
