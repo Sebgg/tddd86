@@ -40,12 +40,13 @@ void render_line(QGraphicsScene* scene, const Point& p1, const Point& p2) {
 
 
 /*
- * A very cool sorting function which firsts puts all points with the same
- * slope to a given point in the same "bucket". The buckets containing more
- * than 3 points are sorted and finally a line is drawn between them and
- * the starting point.
+ * computing function which firsts puts all points with the same
+ * slope to a given starting point in the same "bucket".
+ * The buckets containing more than 3 points are sorted
+ * and finally a line is drawn between the points in the bucket
+ * and the starting point.
  */
-void cool_sort(vector<Point> points, const Point& orgPnt, QGraphicsScene* scene){
+void computeLines(vector<Point> points, const Point& orgPnt, QGraphicsScene* scene){
     map<double, vector<Point>> bucket;
 
     for(Point p : points){
@@ -72,7 +73,7 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
     // open file
-    string filename = "input6400.txt";
+    string filename = "input1600.txt";
     ifstream input;
     input.open(filename);
 
@@ -111,7 +112,7 @@ int main(int argc, char *argv[]) {
     // create watch to count time taken to compute
     auto begin = chrono::high_resolution_clock::now();
     for(auto const &p : points){
-        cool_sort(points, p, scene);
+        computeLines(points, p, scene);
     }
 
     auto end = chrono::high_resolution_clock::now();

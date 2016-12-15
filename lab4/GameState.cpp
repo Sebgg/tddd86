@@ -145,7 +145,7 @@ void GameState::removeRobots() {
 
 void GameState::copyGameState(const GameState& other) {
     for(size_t i = 0; i < other.robots.size(); i++){
-        if(!other.robots[i].isJunk()) {
+        if(!other.robots[i]->isJunk()) {
             Robot *r = new Robot(*other.robots[i]);
         } else {
             Junk *r = new Junk(*other.robots[i]);

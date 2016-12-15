@@ -150,8 +150,9 @@ void compress(istream& input, obitstream& output) {
         for(auto const &c2 : tmp2){
             output.put(c2);
         }
-        //Comma after every pair because it is used as a flag when reading the header.
+        if(){
         output.put(',');
+        }
     }
     output.put('}');
     output.put('\n');
@@ -175,7 +176,7 @@ void decompress(ibitstream& input, ostream& output) {
 
     //Remove the brackets in the beginning and end of the header.
     header.erase(header.begin());
-    header.pop_back();
+    // header.pop_back(); consider bracket as a flag as well as comma
 
     while(!header.empty()){ //Fills the frequency table with the given header frequencies.
         pair = header.substr(0, header.find_first_of(','));
@@ -205,5 +206,6 @@ void freeTree(HuffmanNode* node) {
     } else {
         freeTree(node->one);
         freeTree(node->zero);
+        delete node; // Delete the parent node as well.
     }
 }

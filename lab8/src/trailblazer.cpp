@@ -59,11 +59,7 @@ vector<Node *> depthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
  ***
 */
     }
-    for(auto node : graph.getNodeSet()){
-        node->previous = nullptr;
-        node->visited = false;
-        node->cost = 0;
-    }
+    graph.resetData();
     return path;
 }
 
@@ -182,7 +178,7 @@ vector<Node *> aStar(BasicGraph& graph, Vertex* start, Vertex* end) {
             }
             path.push_back(start);
             reverse(path.begin(), path.end());
-            graph.resetData
+            graph.resetData();
             break;
         }
         curr->visited = true;
