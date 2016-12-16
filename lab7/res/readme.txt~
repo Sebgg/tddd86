@@ -1,0 +1,33 @@
+/**********************************************************************
+ *  Mönsterigenkänning readme.txt
+ **********************************************************************/
+
+/**********************************************************************
+ *  Empirisk    Fyll i tabellen nedan med riktiga körtider i sekunder
+ *  analys      när det känns vettigt att vänta på hela beräkningen.
+ *              Ge uppskattningar av körtiden i övriga fall.
+ *
+ **********************************************************************/
+    
+      N       brute       sortering
+ ----------------------------------
+    150       48,2ms
+    200	      111,1ms
+    300	      327,8ms
+    400	      783ms
+    800	      5843,9ms
+   1600	      46687,2ms
+   3200	      375617ms			//Did not finish the computing process for brute
+   6400	      TL;DC
+  12800	      TL;DC
+
+
+/**********************************************************************
+ *  Teoretisk   Ge ordo-uttryck för värstafallstiden för programmen som
+ *  analys      en funktion av N. Ge en kort motivering.
+ *
+ **********************************************************************/
+
+Brute: O(n^4)
+
+Sortering: O(n^2log(n))

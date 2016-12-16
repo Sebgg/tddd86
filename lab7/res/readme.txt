@@ -11,15 +11,15 @@
     
       N       brute       sortering
  ----------------------------------
-    150       48,2ms
-    200	      111,1ms
-    300	      327,8ms
-    400	      783ms
-    800	      5843,9ms
-   1600	      46687,2ms
-   3200	      375617ms			//Did not finish the computing process for brute
-   6400	      TL;DC
-  12800	      TL;DC
+    150       48,2ms	  33ms
+    200	      111,1ms	  46ms
+    300	      327,8ms	  99ms
+    400	      783ms	  173ms
+    800	      5843,9ms	  639ms
+   1600	      46687,2ms	  2544ms
+   3200	      375617ms	  10469ms	//Did not finish the computing process for brute
+   6400	      TL;DC	  43740ms
+  12800	      TL;DC	  183278ms
 
 
 /**********************************************************************
@@ -28,6 +28,10 @@
  *
  **********************************************************************/
 
-Brute: O(n^2-2n)
+Brute: O(n^4)
+fyra for-loopar som ligger nästlade och i värsta fall löper genom alla n gånger.
 
-Sortering:
+Sortering: O(n^2log(n))
+
+Vi har två for-loopar bredvid varandra (n+n) nästlade i en for-loop (n(n+n)).
+log(n) kommer ifrån att lägga till point i map.
