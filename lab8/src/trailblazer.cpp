@@ -13,6 +13,8 @@
 using namespace std;
 
 bool hasFreeNeighbour(const BasicGraph &graph, Node *curr);
+void buildPath(BasicGraph &graph, Node *curr, vector<Vertex*> &path, Vertex *start);
+
 /*
  * An iterative implementation of Depth First Search for path to target node.
  */
@@ -69,33 +71,20 @@ vector<Node *> depthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
 vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
     vector<Vertex*> path;
     queue<Vertex*> tmpQ;
-    double infinity = numeric_limits<int>::max();
 
-    for(auto node : graph.getNodeSet()){
-        node->cost = infinity;
-    }
-
-    start->cost = 0;
+    start->visited = true;
     tmpQ.push(start);
-
     while(!tmpQ.empty()){
         Node *curr = tmpQ.front();
         tmpQ.pop();
         curr->setColor(GREEN);
         if(graph.compare(curr, end) == 0){
-            while(curr->previous != nullptr){
-                path.push_back(curr);
-                curr = curr->previous;
-            }
-            path.push_back(start);
-            reverse(path.begin(), path.end());
-            graph.resetData();
+            buildPath(graph, curr, path, start);
             break;
-
         }
         for(auto neighbour : graph.getNeighbors(curr)){
-            if(neighbour->cost == infinity){
-                neighbour->cost = curr->cost + 1;
+            if(!neighbour->visited){
+                neighbour->visited = true;
                 neighbour->previous = curr;
                 neighbour->setColor(YELLOW);
                 tmpQ.push(neighbour);
@@ -121,25 +110,18 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
     }
 
     while(!que.isEmpty()){
-        Vertex *u = que.dequeue();
-        u->setColor(GREEN);
-
-        if(graph.compare(u, end) == 0){
-            while(u->previous != nullptr){
-                path.push_back(u);
-                u = u->previous;
-            }
-            path.push_back(start);
-            reverse(path.begin(), path.end());
-            graph.resetData();
+        Vertex *curr = que.dequeue();
+        curr->setColor(GREEN);
+        if(graph.compare(curr, end) == 0){
+            buildPath(graph, curr, path, start);
             break;
         }
-        for(auto neighbour : graph.getNeighbors(u)){
-            double altDist = u->cost + (graph.getEdge(u, neighbour)->cost);
+        for(auto neighbour : graph.getNeighbors(curr)){
+            double altDist = curr->cost + (graph.getEdge(curr, neighbour)->cost);
             if(altDist < neighbour->cost){
                 neighbour->setColor(YELLOW);
                 neighbour->cost = altDist;
-                neighbour->previous = u;
+                neighbour->previous = curr;
                 que.changePriority(neighbour, altDist);
             }
         }
@@ -172,13 +154,7 @@ vector<Node *> aStar(BasicGraph& graph, Vertex* start, Vertex* end) {
         Node* curr = open.dequeue();
         curr->setColor(GREEN);
         if(graph.compare(curr, end) == 0){
-            while(curr->previous != nullptr){
-                path.push_back(curr);
-                curr = curr->previous;
-            }
-            path.push_back(start);
-            reverse(path.begin(), path.end());
-            graph.resetData();
+            buildPath(graph, curr, path, start);
             break;
         }
         curr->visited = true;
@@ -205,4 +181,14 @@ bool hasFreeNeighbour(const BasicGraph &graph, Node* curr ) {
         }
     }
     return false;
+}
+
+void buildPath(BasicGraph &graph, Node *curr, vector<Vertex*> &path, Vertex *start) {
+    while(curr->previous != nullptr){
+        path.push_back(curr);
+        curr = curr->previous;
+    }
+    path.push_back(start);
+    reverse(path.begin(), path.end());
+    graph.resetData();
 }
