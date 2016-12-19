@@ -50,7 +50,9 @@ void computeLines(vector<Point> points, const Point& orgPnt, QGraphicsScene* sce
     map<double, vector<Point>> bucket;
 
     for(Point p : points){
-        bucket[orgPnt.slopeTo(p)].push_back(p);
+        if(orgPnt < p){
+            bucket[orgPnt.slopeTo(p)].push_back(p);
+        }
     }
 
     for(auto const &key : bucket){
